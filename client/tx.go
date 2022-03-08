@@ -12,7 +12,7 @@ import (
 	"golang.org/x/crypto/nacl/sign"
 )
 
-func (a *Client) SendTransferTransaction(amount *big.Int, key, publicKey, addrFrom, addrTo string) (string, error) {
+func (a *Client) SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (string, error) {
 	permission, block_hash, nonce, err := a.GetAccessKeys(addrFrom, publicKey)
 	if err != nil {
 		return "", err

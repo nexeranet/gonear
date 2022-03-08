@@ -13,7 +13,7 @@ type IClient interface {
 	GetAccessKeys(account, publicKey string) (string, string, uint64, error)
 	SendAsyncTx(signedTx string) (string, error)
 	SendAwaitTx(signedTx string) (bool, string, error)
-	SendTransferTransaction(amount *big.Int, key, publicKey, addrFrom, addrTo string) (string, error)
+	SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (string, error)
 }
 
 type Client struct {
