@@ -31,12 +31,6 @@ type PublicKey struct {
 
 var ErrUnknown = errors.New("Unknown error")
 
-type AccessKeys struct {
-	Permission string `json:"permission"`
-	BlockHash  string `json:"block_hash"`
-	Nonce      uint64 `json:"nonce"`
-}
-
 type HeaderBlock struct {
 	Hash string `json:"hash"`
 }
