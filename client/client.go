@@ -21,7 +21,7 @@ type Client struct {
 	url string
 }
 
-func NewApi(url string) *Client {
+func NewClient(url string) *Client {
 	return &Client{url: url}
 }
 
@@ -146,7 +146,7 @@ func (a *Client) SendAwaitTx(signedTx string) (bool, string, error) {
 	return false, "", types.ErrUnknown
 }
 
-func (a *Client) GetAccessKeys(account, publicKey string) (string, string, uint64, error) {
+func (a *Client) GetAccessKeys(account, publicKey string) (*types.Permission, string, uint64, error) {
 	type Params struct {
 		RequestType string `json:"request_type"`
 		Finality    string `json:"finality"`
@@ -156,14 +156,14 @@ func (a *Client) GetAccessKeys(account, publicKey string) (string, string, uint6
 	params := Params{"view_access_key", "final", account, publicKey}
 	response, err := a.c.Call("query", &params)
 	if err := a.checkError(err, response); err != nil {
-		return "", "", 0, err
+		return nil, "", 0, err
 	}
 	var raw types.AccessKeys
 	err = response.GetObject(&raw)
 	if err != nil {
-		return "", "", 0, err
+		return nil, "", 0, err
 	}
-	return raw.Permission, raw.BlockHash, raw.Nonce, nil
+	return &raw.Permission, raw.BlockHash, raw.Nonce, nil
 }
 
 func (a *Client) CallContractFunc(account, method_name, args_base64 string) ([]rune, error) {

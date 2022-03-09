@@ -17,7 +17,7 @@ func (a *Client) SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrT
 	if err != nil {
 		return "", err
 	}
-	if permission != "FullAccess" {
+	if permission.String != "FullAccess" {
 		return "", fmt.Errorf("`Account %s does not have permission to send tokens using key: %s", addrFrom, string(publicKey[:]))
 	}
 	publicKeyBytes, privKeyBytes, err := getKeys(key)
