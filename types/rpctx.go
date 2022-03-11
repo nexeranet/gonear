@@ -6,9 +6,14 @@ type TxInfo struct {
 	Hash string `json:"hash"`
 }
 
+type TransactionOutcome struct {
+	BlockHash string `json:"block_hash"`
+}
+
 type Transaction struct {
-	Status      StatusTx `json:"status"`
-	Transaction TxInfo   `json:"transaction"`
+	Status             StatusTx           `json:"status"`
+	Transaction        TxInfo             `json:"transaction"`
+	TransactionOutcome TransactionOutcome `json:"transaction_outcome"`
 }
 
 type StatusTx struct {

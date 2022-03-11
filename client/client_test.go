@@ -1,7 +1,7 @@
 package client
 
 import (
-	"fmt"
+	"log"
 	"testing"
 )
 
@@ -37,13 +37,47 @@ func TestGetAccessKeys(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			permission, blockHash, nonce, err := client.GetAccessKeys(tt.account, tt.pubKey)
-			fmt.Println(permission, blockHash, nonce)
-			fmt.Println(err)
+			log.Println(permission, blockHash, nonce)
 			if err != nil && !tt.isError {
 				t.Fatalf("expected not error, actual %s", err)
 			}
 			if err == nil && tt.isError {
 				t.Fatalf("Expect error, have nil")
+			}
+		})
+	}
+}
+
+func TestClient__GetBalance(t *testing.T) {
+	type Test struct {
+		isError bool
+		addr    string
+		name    string
+	}
+	tests := []Test{
+		{
+			name:    "simple addr",
+			addr:    "nearkat.testnet",
+			isError: false,
+		},
+		{
+			name:    "invalid addr",
+			addr:    "c292",
+			isError: true,
+		},
+	}
+	client := initTestClient(t)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			balance, err := client.BalanceAt(tt.addr)
+			if err != nil && !tt.isError {
+				t.Fatalf("expected not error, actual %s", err)
+			}
+			if err == nil && tt.isError {
+				t.Fatalf("Expect error, have nil")
+			}
+			if balance == nil && !tt.isError {
+				t.Fatalf("Balance is nil")
 			}
 		})
 	}
