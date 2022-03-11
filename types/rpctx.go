@@ -6,8 +6,16 @@ type TxInfo struct {
 	Hash string `json:"hash"`
 }
 
+type Outcome struct {
+	ReceiptIds  []string `json:"receipt_ids"`
+	GasBurnt    uint64   `json:"gas_burnt"`
+	TokensBurnt string   `json:"tokens_burnt"`
+	ExecutorId  string   `json:"executor_id"`
+}
 type TransactionOutcome struct {
-	BlockHash string `json:"block_hash"`
+	BlockHash string  `json:"block_hash"`
+	Id        string  `json:"id"`
+	Outcome   Outcome `json:"outcome"`
 }
 
 type Transaction struct {

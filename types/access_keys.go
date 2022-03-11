@@ -24,12 +24,12 @@ type Permission struct {
 }
 
 func (p *Permission) UnmarshalJSON(data []byte) error {
-	var perStruct interface{}
-	err := json.Unmarshal(data, &perStruct)
+	var base interface{}
+	err := json.Unmarshal(data, &base)
 	if err != nil {
 		return err
 	}
-	item := reflect.ValueOf(perStruct)
+	item := reflect.ValueOf(base)
 	switch item.Kind() {
 	case reflect.String:
 		p.String = item.String()
