@@ -19,8 +19,8 @@ type FunctionCallPermission struct {
 }
 
 type Permission struct {
-	String       string                 `json:"permission"`
-	FunctionCall FunctionCallPermission `json:"FunctionCall"`
+	String       string                  `json:"permission"`
+	FunctionCall *FunctionCallPermission `json:"FunctionCall"`
 }
 
 func (p *Permission) UnmarshalJSON(data []byte) error {
@@ -36,6 +36,7 @@ func (p *Permission) UnmarshalJSON(data []byte) error {
 	case reflect.Map:
 		fCallValue := item.MapIndex(reflect.ValueOf("FunctionCall"))
 		if !fCallValue.IsNil() {
+			p.FunctionCall = new(FunctionCallPermission)
 			fMap, ok := fCallValue.Interface().(map[string]interface{})
 			if !ok {
 				return fmt.Errorf("Can't convert to map string interface()")
