@@ -32,6 +32,11 @@ func TestGetAccessKeys(t *testing.T) {
 			account: "client.chainlink.testnet",
 			pubKey:  "ed25519:H9k5eiU4xXS3M4z8HzKJSLaZdqGdGwBG49o7orNC4eZW",
 		},
+		{
+			name:    "get contract access keys 2",
+			account: "token.arhius.testnet",
+			pubKey:  "ed25519:9f42REGgZBENqEFSoQkfMwyv2VChsR7Lpy1tvWmYS6mL",
+		},
 	}
 	client := initTestClient(t)
 	for _, tt := range tests {

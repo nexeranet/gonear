@@ -1,6 +1,7 @@
 package client
 
 import (
+	"fmt"
 	"math/big"
 
 	"github.com/nexeranet/gonear/jsonrpc"
@@ -14,6 +15,7 @@ type IClient interface {
 	SendAsyncTx(signedTx string) (string, error)
 	SendAwaitTx(signedTx string) (bool, string, error)
 	SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (string, error)
+	SendCallFunctionTx(methodName string, args []byte, amount, gas *big.Int, key, publicKey, addrFrom, addrTo string) (string, error)
 }
 
 type Client struct {
@@ -162,6 +164,9 @@ func (a *Client) GetAccessKeys(account, publicKey string) (*types.Permission, st
 	err = response.GetObject(&raw)
 	if err != nil {
 		return nil, "", 0, err
+	}
+	if raw.Error != "" {
+		return &raw.Permission, raw.BlockHash, raw.Nonce, fmt.Errorf(raw.Error)
 	}
 	return &raw.Permission, raw.BlockHash, raw.Nonce, nil
 }

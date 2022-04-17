@@ -17,6 +17,10 @@ func formatAmount(amount *big.Int) *big.Int {
 	return yotto
 }
 
+func NewYottoNear(num *big.Int) *big.Int {
+	return formatAmount(num)
+}
+
 func validatePrivateKey(key string) ([]byte, error) {
 	parts := strings.Split(key, ":")
 	if len(parts) == 1 {
