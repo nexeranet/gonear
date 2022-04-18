@@ -12,7 +12,7 @@ import (
 	"golang.org/x/crypto/nacl/sign"
 )
 
-func (a *Client) SendCallFunctionTx(methodName string, args []byte, gas uint64, key, publicKey, addrFrom, addrTo string) (string, error) {
+func (a *Client) SendCallFunctionTx(methodName string, args []byte, deposit *big.Int, gas uint64, key, publicKey, addrFrom, addrTo string) (string, error) {
 	permission, block_hash, nonce, err := a.GetAccessKeys(addrFrom, publicKey)
 	if err != nil {
 		return "", err
@@ -21,7 +21,6 @@ func (a *Client) SendCallFunctionTx(methodName string, args []byte, gas uint64, 
 		return "", fmt.Errorf("`Account %s does not have permission to send tokens using key: %s", addrFrom, string(publicKey[:]))
 	}
 	publicKeyBytes, privKeyBytes, err := getKeys(key)
-	//_, privKeyBytes, err := getKeys(key)
 	if err != nil {
 		return "", err
 	}
@@ -30,7 +29,6 @@ func (a *Client) SendCallFunctionTx(methodName string, args []byte, gas uint64, 
 	if err != nil {
 		return "", err
 	}
-	deposit := big.NewInt(1)
 	action := types.FunctionCallAction{
 		Enum: types.FunctionCallEnum,
 		FunctionCall: types.FunctionCall{
@@ -52,7 +50,6 @@ func (a *Client) SendCallFunctionTx(methodName string, args []byte, gas uint64, 
 		Actions:    actions,
 		BlockHash:  *block_hash_dec_static,
 	}
-	//log.Println(tx)
 	serialized_tx, err := borsh.Serialize(tx)
 	if err != nil {
 		return "", err
@@ -72,7 +69,6 @@ func (a *Client) SendCallFunctionTx(methodName string, args []byte, gas uint64, 
 		return "", err
 	}
 	encoded_bs64 := base64.StdEncoding.EncodeToString(data)
-	hash, err := a.SendAsyncTx(encoded_bs64)
-	fmt.Println(encoded_bs64, err)
+	_, hash, err := a.SendAwaitTx(encoded_bs64)
 	return hash, err
 }

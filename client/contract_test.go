@@ -31,7 +31,6 @@ func TestClient__SendCallFunctionTx(t *testing.T) {
 		},
 	}
 	args := Args{
-		//ReceiverId: "nexeranet.testnet",
 		ReceiverId: "token.arhius.testnet",
 		Amount:     NewYottoNear(big.NewInt(4)).String(),
 		Memo:       nil,
@@ -44,7 +43,7 @@ func TestClient__SendCallFunctionTx(t *testing.T) {
 	client := initTestClient(t)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := client.SendCallFunctionTx("ft_transfer", bytes, tt.gas, key, pubKey, tt.addrFrom, tt.addrTo)
+			_, err := client.SendCallFunctionTx("ft_transfer", bytes, big.NewInt(1), tt.gas, key, pubKey, tt.addrFrom, tt.addrTo)
 			if err != nil && !tt.isError {
 				t.Fatalf("expected not error, actual %s", err)
 			}

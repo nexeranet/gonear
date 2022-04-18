@@ -10,6 +10,7 @@ type AccessKeys struct {
 	Permission Permission `json:"permission"`
 	BlockHash  string     `json:"block_hash"`
 	Nonce      uint64     `json:"nonce"`
+	Error      string     `json:"error"`
 }
 
 type FunctionCallPermission struct {

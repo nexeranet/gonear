@@ -24,6 +24,6 @@ type FunctionCallAction struct {
 type FunctionCall struct {
 	MethodName string
 	Args       []byte
-	Gas        big.Int
+	Gas        uint64
 	Deposit    big.Int
 }
