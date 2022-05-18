@@ -12,22 +12,22 @@ import (
 	"golang.org/x/crypto/nacl/sign"
 )
 
-func (a *Client) SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (string, error) {
+func (a *Client) SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (*types.Transaction, error) {
 	permission, block_hash, nonce, err := a.GetAccessKeys(addrFrom, publicKey)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	if permission.String != "FullAccess" {
-		return "", fmt.Errorf("`Account %s does not have permission to send tokens using key: %s", addrFrom, string(publicKey[:]))
+		return nil, fmt.Errorf("`Account %s does not have permission to send tokens using key: %s", addrFrom, string(publicKey[:]))
 	}
 	publicKeyBytes, privKeyBytes, err := getKeys(key)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	nonce_tx := nonce + 1
 	block_hash_dec, err := base58.Decode(block_hash)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	action := types.TransferAction{
 		Enum: types.TransferEnum,
@@ -49,7 +49,7 @@ func (a *Client) SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrT
 	}
 	serialized_tx, err := borsh.Serialize(tx)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	serializedTxHash := sha256.Sum256(serialized_tx)
 	signature := sign.Sign(nil, serializedTxHash[:], privKeyBytes)
@@ -63,10 +63,9 @@ func (a *Client) SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrT
 	}
 	data, err := borsh.Serialize(signed_tx)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	encoded_bs64 := base64.StdEncoding.EncodeToString(data)
 	//fmt.Println(encoded_bs64)
-	_, hash, err := a.SendAwaitTx(encoded_bs64)
-	return hash, err
+	return a.SendAwaitTx(encoded_bs64)
 }
