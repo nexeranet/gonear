@@ -135,7 +135,14 @@ func (a *Client) SendAwaitTx(signedTx string) (*types.Transaction, error) {
 		return nil, err
 	}
 	var raw types.Transaction
-	return &raw, response.GetObject(&raw)
+	err = response.GetObject(&raw)
+	if err != nil {
+		return nil, err
+	}
+	if raw.Status.IsError() {
+		return &raw, raw.Status.Failure.Error()
+	}
+	return &raw, nil
 }
 
 func (a *Client) GetAccessKeys(account, publicKey string) (*types.Permission, string, uint64, error) {
