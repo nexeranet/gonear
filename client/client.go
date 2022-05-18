@@ -13,9 +13,9 @@ type IClient interface {
 	CheckTx(hash, sender string) (*types.Transaction, error)
 	GetAccessKeys(account, publicKey string) (string, string, uint64, error)
 	SendAsyncTx(signedTx string) (string, error)
-	SendAwaitTx(signedTx string) (bool, string, error)
-	SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (string, error)
-	SendCallFunctionTx(methodName string, args []byte, amount, gas *big.Int, key, publicKey, addrFrom, addrTo string) (string, error)
+	SendAwaitTx(signedTx string) (*types.Transaction, error)
+	SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (*types.Transaction, error)
+	SendCallFunctionTx(methodName string, args []byte, amount, gas *big.Int, key, publicKey, addrFrom, addrTo string) (*types.Transaction, error)
 }
 
 type Client struct {
@@ -129,23 +129,13 @@ func (a *Client) SendAsyncTx(signedTx string) (string, error) {
 	return response.GetString()
 }
 
-func (a *Client) SendAwaitTx(signedTx string) (bool, string, error) {
+func (a *Client) SendAwaitTx(signedTx string) (*types.Transaction, error) {
 	response, err := a.c.Call("broadcast_tx_commit", [1]string{signedTx})
 	if err := a.checkError(err, response); err != nil {
-		return false, "", err
+		return nil, err
 	}
 	var raw types.Transaction
-	err = response.GetObject(&raw)
-	if err != nil {
-		return false, "", err
-	}
-	if raw.Status.IsError() {
-		return false, "", raw.Status.Failure.Error()
-	}
-	if raw.Status.IsSuccess() {
-		return true, raw.Transaction.Hash, nil
-	}
-	return false, "", types.ErrUnknown
+	return &raw, response.GetObject(&raw)
 }
 
 func (a *Client) GetAccessKeys(account, publicKey string) (*types.Permission, string, uint64, error) {

@@ -3,7 +3,10 @@ package types
 import "fmt"
 
 type TxInfo struct {
-	Hash string `json:"hash"`
+	Hash       string `json:"hash"`
+	SignerId   string `json:"signer_id"`
+	ReceiverId string `json:"receiver_id"`
+	Nonce      uint64 `json:"nonce"`
 }
 
 type Outcome struct {
