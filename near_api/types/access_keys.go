@@ -6,17 +6,17 @@ type AccessKey struct {
 }
 
 type KeyItem struct {
-    PublicKey string `json:"public_key"`
-    AccessKey AccessKey `json:"access_key"`
+	PublicKey string    `json:"public_key"`
+	AccessKey AccessKey `json:"access_key"`
 }
 
 type AccessKeysView struct {
-	Permission Permission `json:"permission"`
-	BlockHash  string     `json:"block_hash"`
-	BlockHeight string `json:"block_height"`
-	Nonce      uint64     `json:"nonce"`
-	Error      string     `json:"error"`
+	Permission  Permission `json:"permission"`
+	BlockHash   string     `json:"block_hash"`
+	BlockHeight string     `json:"block_height"`
+	Nonce       uint64     `json:"nonce"`
+	Error       string     `json:"error"`
 }
 type AccessKeysListViev struct {
-    Keys []KeyItem
+	Keys []KeyItem
 }

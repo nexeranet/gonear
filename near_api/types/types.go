@@ -2,9 +2,12 @@ package near_api_types
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"reflect"
 )
+
+var ErrUnknown = errors.New("Unknown error")
 
 type Permission struct {
 	String       string                  `json:"permission"`

@@ -1,8 +1,6 @@
 package near_api
 
 import (
-	// "fmt"
-
 	types "github.com/nexeranet/gonear/near_api/types"
 )
 
