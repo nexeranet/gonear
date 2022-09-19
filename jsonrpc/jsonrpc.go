@@ -47,11 +47,12 @@ type RPCResponse struct {
 }
 
 type RPCErrorInfo struct {
-	ErrorMessage string `json:"error_message"`
+	ErrorMessage string `json:"error_message,omitempty"`
 }
 type RPCErrorCause struct {
-	Name string       `json:"name"`
-	Info RPCErrorInfo `json:"info"`
+	Name string `json:"name"`
+	// Info RPCErrorInfo `json:"info"`
+	Info map[string]interface{} `json:"info"`
 }
 type RPCError struct {
 	Code    int           `json:"code"`

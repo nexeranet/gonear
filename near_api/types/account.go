@@ -7,5 +7,5 @@ type AccountView struct {
 	StorageUsage  uint64 `json:"storage_usage"`
 	StoragePaidAt uint64 `json:"storage_paid_at"`
 	BlockHash     string `json:"block_hash"`
-	BlockHeight   string `json:"block_height"`
+	BlockHeight   uint64 `json:"block_height"`
 }

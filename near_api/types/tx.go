@@ -52,21 +52,14 @@ func (a ActionErrorKind) ReturnError() error {
 	return ErrUnknown
 }
 
-// another actions in transfer
-type ActionTransfer struct {
-	Transfer struct {
-		Deposit string `json:"deposit"`
-	} `json:"Transfer"`
-}
-
 type Transaction struct {
-	SignerID   string           `json:"signer_id"`
-	PublicKey  string           `json:"public_key"`
-	Nonce      int              `json:"nonce"`
-	ReceiverID string           `json:"receiver_id"`
-	Actions    []ActionTransfer `json:"actions"`
-	Signature  string           `json:"signature"`
-	Hash       string           `json:"hash"`
+	SignerID   string                   `json:"signer_id"`
+	PublicKey  string                   `json:"public_key"`
+	Nonce      int                      `json:"nonce"`
+	ReceiverID string                   `json:"receiver_id"`
+	Actions    []map[string]interface{} `json:"actions"`
+	Signature  string                   `json:"signature"`
+	Hash       string                   `json:"hash"`
 }
 type TransactionOutcome struct {
 	Proof []struct {
@@ -86,27 +79,28 @@ type TransactionOutcome struct {
 		} `json:"status"`
 	} `json:"outcome"`
 }
+type ReceiptOutcome struct {
+	BlockHash string `json:"block_hash"`
+	ID        string `json:"id"`
+	Proof     []struct {
+		Hash      string `json:"hash"`
+		Direction string `json:"direction"`
+	} `json:"proof"`
+	Outcome struct {
+		Logs        []interface{} `json:"logs"`
+		ReceiptIds  []string      `json:"receipt_ids"`
+		GasBurnt    int64         `json:"gas_burnt"`
+		TokensBurnt string        `json:"tokens_burnt"`
+		ExecutorID  string        `json:"executor_id"`
+		Status      struct {
+			SuccessValue string `json:"SuccessValue"`
+		} `json:"status"`
+	} `json:"outcome"`
+}
 
 type TxView struct {
-	Status             StatusTx    `json:"status"`
-	Transaction        Transaction `json:"transaction"`
+	Status             StatusTx           `json:"status"`
+	Transaction        Transaction        `json:"transaction"`
 	TransactionOutcome TransactionOutcome `json:"transaction_outcome"`
-	ReceiptsOutcome []struct {
-		Proof []struct {
-			Hash      string `json:"hash"`
-			Direction string `json:"direction"`
-		} `json:"proof"`
-		BlockHash string `json:"block_hash"`
-		ID        string `json:"id"`
-		Outcome   struct {
-			Logs        []interface{} `json:"logs"`
-			ReceiptIds  []string      `json:"receipt_ids"`
-			GasBurnt    int64         `json:"gas_burnt"`
-			TokensBurnt string        `json:"tokens_burnt"`
-			ExecutorID  string        `json:"executor_id"`
-			Status      struct {
-				SuccessValue string `json:"SuccessValue"`
-			} `json:"status"`
-		} `json:"outcome"`
-	} `json:"receipts_outcome"`
+	ReceiptsOutcome    []ReceiptOutcome   `json:"receipts_outcome"`
 }

@@ -13,7 +13,7 @@ type KeyItem struct {
 type AccessKeysView struct {
 	Permission  Permission `json:"permission"`
 	BlockHash   string     `json:"block_hash"`
-	BlockHeight string     `json:"block_height"`
+	BlockHeight uint64     `json:"block_height"`
 	Nonce       uint64     `json:"nonce"`
 	Error       string     `json:"error"`
 }
