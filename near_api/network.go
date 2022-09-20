@@ -41,7 +41,7 @@ func (a *NearApi) ValidationStatusByHash (hash string) (*types.ValidationStatusV
 }
 
 func (a *NearApi) ValidationStatus () (*types.ValidationStatusView, error) {
-	response, err := a.c.Call("validators", []interface{}{})
+	response, err := a.c.Call("validators", []interface{}{nil})
 	if err := a.checkError(err, response); err != nil {
 		return nil, err
 	}

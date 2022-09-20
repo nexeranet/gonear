@@ -4,10 +4,6 @@ import (
 	"testing"
 )
 
-func initApi() *NearApi {
-	Url := "https://rpc.testnet.near.org"
-	return New(Url)
-}
 
 func TestCheckTx(t *testing.T) {
 	type Test struct {
@@ -16,7 +12,7 @@ func TestCheckTx(t *testing.T) {
 		sender  string
 		isError bool
 	}
-	api := initApi()
+	api := initTesnetApi()
 	tests := []Test{
 		{
 			name:    "base case",
@@ -75,7 +71,7 @@ func TestSendAsyncTx(t *testing.T) {
 		signedTxHash string
 		isError      bool
 	}
-	api := initApi()
+	api := initTesnetApi()
 
 	tests := []Test{
 		{
@@ -108,7 +104,7 @@ func TestSendAwaitTx(t *testing.T) {
 		signedTxHash string
 		isError      bool
 	}
-	api := initApi()
+	api := initTesnetApi()
 
 	tests := []Test{
 		{

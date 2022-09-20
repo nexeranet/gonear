@@ -11,7 +11,7 @@ func TestViewAccount(t *testing.T){
         isError bool
     }
 
-	client := initApi()
+	client := initTesnetApi()
     tests := []Test{
         {
             name: "Valid accound id",

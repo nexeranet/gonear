@@ -40,7 +40,7 @@ func TestViewAccessKey(t *testing.T) {
 			isError: true,
 		},
 	}
-	client := initApi()
+	client := initTesnetApi()
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			view_key, err := client.ViewAccessKey(tt.account, tt.pubKey)
@@ -64,7 +64,7 @@ func TestViewAccessKeyList(t *testing.T) {
 		isError bool
 	}
 
-	client := initApi()
+	client := initTesnetApi()
     tests := []Test{
 		{
 			name:     "Base case",

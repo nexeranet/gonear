@@ -22,7 +22,7 @@ func (a *NearApi) GasPriceByHash(hash string) (*types.GasPriceView, error) {
 }
 
 func (a *NearApi) GasPrice() (*types.GasPriceView, error) {
-	response, err := a.c.Call("gas_price", []interface{}{})
+	response, err := a.c.Call("gas_price", []interface{}{nil})
 	if err := a.checkError(err, response); err != nil {
 		return nil, err
 	}

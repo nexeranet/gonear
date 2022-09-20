@@ -1,6 +1,8 @@
 package near_api
 
 import (
+	"fmt"
+
 	types "github.com/nexeranet/gonear/near_api/types"
 )
 func (a *NearApi) ViewContractCode(accountId string) (*types.ContractCodeView, error) {
@@ -34,7 +36,7 @@ func (a *NearApi) ViewContractState(accountId, prefixBase64 string) (*types.Cont
 	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) CallContractFunc(account, method_name, args_base64 string) (*types.ContractFuncResult, error) {
+func (a *NearApi) CallContractFunc(accountId, method_name, args_base64 string) (*types.ContractFuncResult, error) {
 	type Params struct {
 		RequestType string `json:"request_type"`
 		Finality    string `json:"finality"`
@@ -42,15 +44,18 @@ func (a *NearApi) CallContractFunc(account, method_name, args_base64 string) (*t
 		MethodName  string `json:"method_name"`
 		ArgsBase64  string `json:"args_base64"`
 	}
-	params := Params{"call_function", "final", account, method_name, args_base64}
+	params := Params{"call_function", "final", accountId, method_name, args_base64}
 	response, err := a.c.Call("query", &params)
-	if err != nil {
+	if err := a.checkError(err, response); err != nil {
 		return nil, err
 	}
 	var raw types.ContractFuncResult
 	err = response.GetObject(&raw)
 	if err != nil {
 		return nil, err
+	}
+	if raw.Error != "" {
+		return nil, fmt.Errorf(raw.Error)
 	}
 	return &raw, nil
 }

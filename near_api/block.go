@@ -36,7 +36,7 @@ func (a *NearApi) BlockByHash(hash string) (*types.BlockView, error) {
 		BlockId string `json:"block_id"`
 	}
 	params := &Params{hash}
-	response, err := a.c.Call("status", params)
+	response, err := a.c.Call("block", params)
 	if err := a.checkError(err, response); err != nil {
 		return nil, err
 	}
