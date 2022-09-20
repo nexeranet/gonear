@@ -1,6 +1,6 @@
 package near_api
 
-func initTesnetApi() *NearApi {
+func initTesnetApi() NearApiI {
 	Url := "https://rpc.testnet.near.org"
 	return New(Url)
 }
