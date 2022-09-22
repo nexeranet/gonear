@@ -56,6 +56,8 @@ func (p *Permission) UnmarshalJSON(data []byte) error {
 				p.FunctionCall.ReceiverId = receiver_id.(string)
 			}
 		}
+	default:
+		return fmt.Errorf("Unknown json type, can't unmarshal JSON")
 	}
 	return nil
 }
