@@ -10,9 +10,10 @@ import (
 	"github.com/near/borsh-go"
 	"github.com/nexeranet/gonear/types"
 	"golang.org/x/crypto/nacl/sign"
+	near_api_types "github.com/nexeranet/gonear/near_api/types"
 )
 
-func (a *Client) SendCallFunctionTx(methodName string, args []byte, deposit *big.Int, gas uint64, key, publicKey, addrFrom, addrTo string) (*types.Transaction, error) {
+func (a *Client) SendCallFunctionTx(methodName string, args []byte, deposit *big.Int, gas uint64, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error) {
 	permission, block_hash, nonce, err := a.GetAccessKeys(addrFrom, publicKey)
 	if err != nil {
 		return nil, err
@@ -69,5 +70,5 @@ func (a *Client) SendCallFunctionTx(methodName string, args []byte, deposit *big
 		return nil, err
 	}
 	encoded_bs64 := base64.StdEncoding.EncodeToString(data)
-	return a.SendAwaitTx(encoded_bs64)
+	return a.C.SendAwaitTx(encoded_bs64)
 }

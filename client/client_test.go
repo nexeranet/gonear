@@ -7,11 +7,7 @@ import (
 
 func initTestClient(t *testing.T) *Client {
 	Url := "https://rpc.testnet.near.org"
-	client, err := NewClient(Url).Init()
-	if err != nil {
-		t.Fatalf("Init client error %s", err.Error())
-	}
-	return client
+	return NewClient(Url)
 }
 
 func TestGetAccessKeys(t *testing.T) {

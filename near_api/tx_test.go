@@ -48,7 +48,6 @@ func TestCheckTx(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tx, err := api.CheckTx(tt.hash, tt.sender)
-			// fmt.Println(tx, err)
 			if err != nil && !tt.isError {
 				t.Fatalf("expected not error, actual %s", err)
 			}

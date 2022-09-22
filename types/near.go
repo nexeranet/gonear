@@ -9,9 +9,9 @@ type Near struct {
 }
 
 func NewNear(amount int64) *Near {
-	yotto, _ := big.NewInt(0).SetString(oneNearString, 10)
-	yotto.Mul(yotto, big.NewInt(amount))
-	return &Near{yotto}
+    yotto, _ := big.NewInt(0).SetString(oneNearString, 10)
+    yotto.Mul(yotto, big.NewInt(amount))
+    return &Near{yotto}
 }
 
 func (n *Near) bigInt() *big.Int {

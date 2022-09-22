@@ -52,3 +52,7 @@ func (a *NearApi) checkError(err error, response *jsonrpc.RPCResponse) error {
 	}
 	return nil
 }
+
+func (a *NearApi) GetUrl() string {
+    return a.url
+}

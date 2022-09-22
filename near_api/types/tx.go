@@ -61,6 +61,7 @@ type Transaction struct {
 	Signature  string                   `json:"signature"`
 	Hash       string                   `json:"hash"`
 }
+
 type TransactionOutcome struct {
 	Proof []struct {
 		Hash      string `json:"hash"`
