@@ -51,7 +51,6 @@ type RPCErrorInfo struct {
 }
 type RPCErrorCause struct {
 	Name string `json:"name"`
-	// Info RPCErrorInfo `json:"info"`
 	Info map[string]interface{} `json:"info"`
 }
 type RPCError struct {
