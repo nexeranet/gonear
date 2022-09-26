@@ -4,16 +4,15 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
-	"math/big"
 
 	"github.com/mr-tron/base58"
 	"github.com/near/borsh-go"
+	near_api_types "github.com/nexeranet/gonear/near_api/types"
 	"github.com/nexeranet/gonear/types"
 	"golang.org/x/crypto/nacl/sign"
-	near_api_types "github.com/nexeranet/gonear/near_api/types"
 )
 
-func (a *Client) SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error) {
+func SendTransaction[T types.Action] (a *Client, key, publicKey, addrFrom, addrTo string, actions types.Actions[T]) (*near_api_types.TxView, error) {
 	access_key, err := a.C.ViewAccessKey(addrFrom, publicKey)
 	if err != nil {
 		return nil, err
@@ -30,15 +29,8 @@ func (a *Client) SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrT
 	if err != nil {
 		return nil, err
 	}
-	action := types.TransferAction{
-		Enum: types.TransferEnum,
-		Transfer: types.Transfer{
-			Deposit: *amount,
-		},
-	}
-	actions := []types.TransferAction{action}
 	block_hash_dec_fix := (*[32]byte)(block_hash_dec)
-	tx := types.TxTransfer{
+	tx := types.Transaction[T]{
 		SignerId: addrFrom,
 		PublicKey: types.PublicKey{
 			Data: *publicKeyBytes,
@@ -55,7 +47,7 @@ func (a *Client) SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrT
 	serializedTxHash := sha256.Sum256(serialized_tx)
 	signature := sign.Sign(nil, serializedTxHash[:], privKeyBytes)
 	signature_fixed := (*[64]byte)(signature)
-	signed_tx := types.SignedTxTransfer{
+	signed_tx := types.SignedTransaction[T]{
 		Transaction: tx,
 		Signature: types.Signature{
 			KeyType: 0,

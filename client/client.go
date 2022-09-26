@@ -10,7 +10,6 @@ import (
 type IClient interface {
 	BalanceAt(string) (*big.Int, error)
 	CheckTx(hash, sender string) (*types.TxView, error)
-	GetAccessKeys(account, publicKey string) (string, string, uint64, error)
 	SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (*types.TxView, error)
 	SendCallFunctionTx(methodName string, args []byte, amount, gas *big.Int, key, publicKey, addrFrom, addrTo string) (*types.TxView, error)
 }
@@ -26,6 +25,7 @@ func NewClient(url string) *Client {
 func (a *Client) CheckTx(hash, sender string) (*types.TxView, error) {
 	return a.C.CheckTx(hash, sender)
 }
+
 func (a *Client) BalanceAt(accountId string) (*big.Int, error) {
     acc, err := a.C.ViewAccount(accountId)
     if err != nil {
@@ -34,12 +34,4 @@ func (a *Client) BalanceAt(accountId string) (*big.Int, error) {
     i := new(big.Int)
 	i.SetString(acc.Amount, 10)
     return i, nil
-}
-
-func (a *Client) GetAccessKeys(account, publicKey string) (*types.Permission, string, uint64, error) {
-	raw, err := a.C.ViewAccessKey(account, publicKey)
-	if err != nil {
-		return nil, "", 0, err
-	}
-	return &raw.Permission, raw.BlockHash, raw.Nonce, nil
 }

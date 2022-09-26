@@ -14,19 +14,19 @@ import (
 )
 
 func (a *Client) SendCallFunctionTx(methodName string, args []byte, deposit *big.Int, gas uint64, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error) {
-	permission, block_hash, nonce, err := a.GetAccessKeys(addrFrom, publicKey)
+	access_key, err := a.C.ViewAccessKey(addrFrom, publicKey)
 	if err != nil {
 		return nil, err
 	}
-	if permission.String != "FullAccess" {
+	if access_key.Permission.String != "FullAccess" {
 		return nil, fmt.Errorf("`Account %s does not have permission to send tokens using key: %s", addrFrom, string(publicKey[:]))
 	}
 	publicKeyBytes, privKeyBytes, err := getKeys(key)
 	if err != nil {
 		return nil, err
 	}
-	nonce_tx := nonce + 1
-	block_hash_dec, err := base58.Decode(block_hash)
+	nonce_tx := access_key.Nonce + 1
+	block_hash_dec, err := base58.Decode(access_key.BlockHash)
 	if err != nil {
 		return nil, err
 	}

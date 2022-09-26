@@ -58,3 +58,11 @@ type BlockView struct {
 	Header HeaderBlock `json:"header"`
 	Chunks []Chunk     `json:"chunks"`
 }
+
+type BlockChangesView struct {
+	BlockHash string `json:"block_hash"`
+	Changes   []struct {
+		Type      string `json:"type"`
+		AccountID string `json:"account_id"`
+	} `json:"changes"`
+}

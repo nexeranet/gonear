@@ -2,10 +2,18 @@ package client
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"math/big"
 	"testing"
+
+	"github.com/nexeranet/gonear/types"
 )
+
+func prettyPrint(i interface{}) string {
+    s, _ := json.MarshalIndent(i, "", " ")
+    return string(s)
+}
 
 func TestClient__SendCallFunctionTx(t *testing.T) {
 	type Test struct {
@@ -32,7 +40,7 @@ func TestClient__SendCallFunctionTx(t *testing.T) {
 	}
 	args := Args{
 		ReceiverId: "token.arhius.testnet",
-		Amount:     NewYottoNear(big.NewInt(4)).String(),
+		Amount:     types.NewNear(4).String(),
 		Memo:       nil,
 	}
 	bytes, err := json.Marshal(&args)
@@ -45,6 +53,8 @@ func TestClient__SendCallFunctionTx(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 
 			tx, err := client.SendCallFunctionTx("ft_transfer", bytes, big.NewInt(1), tt.gas, key, pubKey, tt.addrFrom, tt.addrTo)
+            fmt.Println(prettyPrint(tx))
+            fmt.Println(err)
 
 			if err != nil && !tt.isError {
 				t.Fatalf("expected not error, actual %s", err)

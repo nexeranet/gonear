@@ -12,6 +12,7 @@ type NearApi struct {
 
 type NearApiI interface {
 	ViewAccessKey(account, publicKey string) (*types.AccessKeysView, error)
+    ViewAccessKeyByBlockId(account, publicKey string, blockId uint64) (*types.AccessKeysView, error)
 	ViewAccessKeyList(account string) (*types.AccessKeysListViev, error)
 	ViewAccount(accountId string) (*types.AccountView, error)
 	Block() (*types.BlockView, error)

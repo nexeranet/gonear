@@ -22,7 +22,38 @@ type ContractStateView struct {
 
 type ContractFuncResult struct {
 	Result      interface{} `json:"result"`
-	BlockHeight uint64 `json:"block_height"`
-	BlockHash   string `json:"block_hash"`
-	Error       string `json:"error,omitempty"`
+	BlockHeight uint64      `json:"block_height"`
+	BlockHash   string      `json:"block_hash"`
+	Error       string      `json:"error,omitempty"`
+}
+
+type ContractStateChangesView struct {
+	BlockHash string `json:"block_hash"`
+	Changes   []struct {
+		Cause struct {
+			Type        string `json:"type"`
+			ReceiptHash string `json:"receipt_hash"`
+		} `json:"cause"`
+		Type   string `json:"type"`
+		Change struct {
+			AccountID   string `json:"account_id"`
+			KeyBase64   string `json:"key_base64"`
+			ValueBase64 string `json:"value_base64"`
+		} `json:"change"`
+	} `json:"changes"`
+}
+
+type ContractCodeChangesView struct {
+	BlockHash string `json:"block_hash"`
+	Changes   []struct {
+		Cause struct {
+			Type        string `json:"type"`
+			ReceiptHash string `json:"receipt_hash"`
+		} `json:"cause"`
+		Type   string `json:"type"`
+		Change struct {
+			AccountID  string `json:"account_id"`
+			CodeBase64 string `json:"code_base64"`
+		} `json:"change"`
+	} `json:"changes"`
 }

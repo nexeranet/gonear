@@ -57,6 +57,51 @@ func TestViewAccessKey(t *testing.T) {
 	}
 }
 
+func TestViewAccessKeyByBlockId(t *testing.T) {
+	type Test struct {
+		name    string
+		account string
+        blockId uint64
+		pubKey  string
+		isError bool
+	}
+	tests := []Test{
+		{
+			name:    "simple addr",
+			account: "nexeranet.testnet",
+			pubKey:  "ed25519:7phkB1HWhWETQ1WkErTUS58s1EjMr4F8JFYg9VTQDk3X",
+            blockId: 101076582,
+		},
+		{
+			name:    "invalid account id",
+			account: "asdfasdf",
+			pubKey:  "ed25519:9f42REGgZBENqEFSoQkfMwyv2VChsR7Lpy1tvWmYS6mL",
+			isError: true,
+		},
+		{
+			name:    "invalid public key",
+			account: "asdfasdf",
+			pubKey:  "asdfasfdsadf",
+			isError: true,
+		},
+	}
+	client := initTesnetApi()
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			view_key, err := client.ViewAccessKeyByBlockId(tt.account, tt.pubKey, tt.blockId)
+			if err != nil && !tt.isError {
+				t.Fatalf("expected not error, actual %s", err)
+			}
+			if err == nil && tt.isError {
+				t.Fatalf("Expect error, have nil")
+			}
+            if !tt.isError && view_key == nil {
+				t.Fatalf("Expect struct, not nil")
+            }
+		})
+	}
+}
+
 func TestViewAccessKeyList(t *testing.T) {
 	type Test struct {
 		name    string

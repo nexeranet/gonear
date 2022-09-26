@@ -20,3 +20,24 @@ type AccessKeysView struct {
 type AccessKeysListViev struct {
 	Keys []KeyItem
 }
+
+type AccessKeyChange struct {
+	Cause struct {
+		Type   string `json:"type"`
+		TxHash string `json:"tx_hash"`
+	} `json:"cause"`
+	Type   string `json:"type"`
+	Change struct {
+		AccountID string `json:"account_id"`
+		PublicKey string `json:"public_key"`
+		AccessKey struct {
+			Nonce      int    `json:"nonce"`
+			Permission string `json:"permission"`
+		} `json:"access_key"`
+	} `json:"change"`
+}
+
+type AccessKeyChangesView struct {
+	BlockHash string            `json:"block_hash"`
+	Changes   []AccessKeyChange `json:"changes"`
+}

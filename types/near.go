@@ -14,6 +14,10 @@ func NewNear(amount int64) *Near {
     return &Near{yotto}
 }
 
-func (n *Near) bigInt() *big.Int {
+func (n *Near) BigInt() *big.Int {
     return n.value
+}
+
+func (n *Near) String() string {
+    return n.value.String()
 }

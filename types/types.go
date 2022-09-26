@@ -2,8 +2,18 @@ package types
 
 import (
 	"errors"
+	"math/big"
 
 	"github.com/near/borsh-go"
+)
+
+var ErrUnknown = errors.New("Unknown error")
+
+type AccessKeyPermissionEnum borsh.Enum
+
+const (
+	FunctionCallPermissionEnum AccessKeyPermissionEnum = iota
+	FullAccessPermissionEnum
 )
 
 type ActionEnum borsh.Enum
@@ -29,13 +39,57 @@ type PublicKey struct {
 	Data    [32]byte
 }
 
-var ErrUnknown = errors.New("Unknown error")
-
-type HeaderBlock struct {
-	Hash string `json:"hash"`
+type AccessKey struct {
+	Nonce      uint64
+	Permission AccessKeyPermission
 }
 
-type Block struct {
-	Author string      `json:"author"`
-	Header HeaderBlock `json:"header"`
+type AccessKeyPermission struct {
+	Enum         AccessKeyPermissionEnum
+	FunctionCall FunctionCallPermission
+	FullAccess   FullAccessPermission
+}
+
+type FunctionCallPermission struct {
+	Allowance   *big.Int
+	ReceiverID  string
+	MethodNames []string
+}
+
+type FullAccessPermission struct{}
+
+// type Action struct {
+// 	Enum           ActionEnum
+// 	CreateAccount  *CreateAccount
+// 	DeployContract *DeployContract
+// 	FunctionCall   *FunctionCall
+// 	Transfer       *Transfer
+// 	Stake          *Stake
+// 	AddKey         *AddKey
+// 	DeleteKey      *DeleteKey
+// 	DeleteAccount  *DeleteAccount
+// }
+
+type CreateAccount struct{}
+
+type DeployContract struct {
+	Code []byte
+}
+
+type Stake struct {
+	Stake     big.Int
+	PublicKey PublicKey
+}
+
+type AddKey struct {
+	PublicKey PublicKey
+	AccessKey AccessKey
+}
+
+type DeleteKey struct {
+	PublicKey PublicKey
+}
+
+type DeleteAccount struct {
+	BeneficiaryID string
 }
