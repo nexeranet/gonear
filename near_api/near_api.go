@@ -34,6 +34,9 @@ type NearApiI interface {
 	CheckTx(hash, sender string) (*types.TxView, error)
 	SendAsyncTx(signedTx string) (string, error)
 	SendAwaitTx(signedTx string) (*types.TxView, error)
+    GenesisConfig() (raw *types.GenesisConfigView, err error)
+    ProtocolConfig() (raw *types.ProtocolConfigView, err error)
+    ProtocolConfigByBlockId(blockId uint64) (raw *types.ProtocolConfigView, err error)
 }
 
 func New(url string) NearApiI {

@@ -35,7 +35,7 @@ type GenesisConfigView struct {
 	ProtocolTreasuryAccount   string `json:"protocol_treasury_account"`
 	FishermenThreshold        string `json:"fishermen_threshold"`
 	MinimumStakeDivisor       int    `json:"minimum_stake_divisor"`
-	// RuntimeConfig             RuntimeConfigView `json:"runtime_config"`
+	RuntimeConfig             RuntimeConfigView `json:"runtime_config"`
 }
 
 type RuntimeConfigView struct {

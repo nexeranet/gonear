@@ -1,18 +1,19 @@
 package near_api
 
 import (
-    types "github.com/nexeranet/gonear/near_api/types"
+	types "github.com/nexeranet/gonear/near_api/types"
 )
 
-func (a *NearApi) GenesisConfig() (raw *types.GenesisConfigView, err error) {
+func (a *NearApi) GenesisConfig() (*types.GenesisConfigView, error) {
 	response, err := a.c.Call("EXPERIMENTAL_genesis_config")
 	if err := a.checkError(err, response); err != nil {
 		return nil, err
 	}
-	return raw, response.GetObject(raw)
+    var raw types.GenesisConfigView
+	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ProtocolConfig() (raw *types.ProtocolConfigView, err error) {
+func (a *NearApi) ProtocolConfig() (*types.ProtocolConfigView, error) {
 	type Params struct {
 		Finality string `json:"finality"`
 	}
@@ -21,10 +22,11 @@ func (a *NearApi) ProtocolConfig() (raw *types.ProtocolConfigView, err error) {
 	if err := a.checkError(err, response); err != nil {
 		return nil, err
 	}
-	return raw, response.GetObject(raw)
+    var raw types.ProtocolConfigView
+	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ProtocolConfigByBlockId(blockId uint64) (raw *types.ProtocolConfigView, err error) {
+func (a *NearApi) ProtocolConfigByBlockId(blockId uint64) (*types.ProtocolConfigView, error) {
 	type Params struct {
 		BlockId uint64 `json:"block_id"`
 	}
@@ -33,5 +35,6 @@ func (a *NearApi) ProtocolConfigByBlockId(blockId uint64) (raw *types.ProtocolCo
 	if err := a.checkError(err, response); err != nil {
 		return nil, err
 	}
-	return raw, response.GetObject(raw)
+    var raw types.ProtocolConfigView
+	return &raw, response.GetObject(&raw)
 }
