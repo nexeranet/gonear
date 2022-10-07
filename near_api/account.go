@@ -22,10 +22,10 @@ func (a *NearApi) ViewAccount(accountId string) (*types.AccountView, error) {
 func (a *NearApi) ViewAccountByBlockId(accountId string, blockId uint64) (*types.AccountView, error) {
 	type Params struct {
 		RequestType string `json:"request_type"`
-		Finality    string `json:"finality"`
+		BlockId     uint64 `json:"block_id"`
 		AccountID   string `json:"account_id"`
 	}
-	params := Params{"view_account", "final", accountId}
+	params := Params{"view_account", blockId, accountId}
 	response, err := a.c.Call("query", &params)
 	if err := a.checkError(err, response); err != nil {
 		return nil, err

@@ -1,6 +1,7 @@
 package near_api
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -134,6 +135,187 @@ func TestCallContractFunc(t *testing.T) {
 			}
 			if err == nil && tt.isError {
 				t.Fatalf("Expect error, have nil, %s", tt.name)
+			}
+			if !tt.isError && result == nil {
+				t.Fatalf("Expect struct, not nil")
+			}
+		})
+	}
+}
+
+func TestViewContractCodeChanges(t *testing.T) {
+	type Test struct {
+		name     string
+		accounts []string
+		isError  bool
+	}
+
+	api := initTesnetApi()
+	tests := []Test{
+		{
+			name:     "Valid contract",
+			accounts: []string{"dev-1588039999690"},
+			isError:  false,
+		},
+		// INFO: without error, HMMMMMMMM
+		{
+			name:     "Invalid contract address, user address",
+			accounts: []string{"nexeranet.testnet"},
+			isError:  false,
+		},
+		{
+			name:     "Invalid accounts id",
+			accounts: []string{"___"},
+			isError:  true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			block, err := api.ViewContractCodeChanges(tt.accounts)
+			fmt.Println(err)
+			if err != nil && !tt.isError {
+				t.Fatalf("expected not error, actual %s", err)
+			}
+			if err == nil && tt.isError {
+				t.Fatalf("Expect error, have nil")
+			}
+			if !tt.isError && block == nil {
+				t.Fatalf("Expect struct, not nil")
+			}
+		})
+	}
+}
+
+func TestViewContractCodeChangesByBlockId(t *testing.T) {
+	type Test struct {
+		name     string
+		accounts []string
+		blockId  uint64
+		isError  bool
+	}
+	api := initTesnetApi()
+	tests := []Test{
+		{
+			name:     "Valid contract",
+			accounts: []string{"dev-1588039999690"},
+			blockId:  102118895,
+			isError:  false,
+		},
+		// INFO: without error, HMMMMMMMM
+		{
+			name:     "Invalid contract address, user address",
+			accounts: []string{"nexeranet.testnet"},
+			blockId:  102118895,
+			isError:  false,
+		},
+		{
+			name:     "Invalid accounts id",
+			accounts: []string{"___"},
+			isError:  true,
+		},
+		{
+			name:     "Invalid block id",
+			accounts: []string{"dev-1588039999690"},
+			blockId:  0,
+			isError:  true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			block, err := api.ViewContractCodeChangesByBlockId(tt.accounts, tt.blockId)
+			fmt.Println(err)
+			if err != nil && !tt.isError {
+				t.Fatalf("expected not error, actual %s", err)
+			}
+			if err == nil && tt.isError {
+				t.Fatalf("Expect error, have nil")
+			}
+			if !tt.isError && block == nil {
+				t.Fatalf("Expect struct, not nil")
+			}
+		})
+	}
+}
+
+func TestViewContractStateChanges(t *testing.T) {
+	type Test struct {
+		name     string
+		accounts []string
+		args     string
+		isError  bool
+	}
+	api := initTesnetApi()
+	tests := []Test{
+		{
+			name:     "Valid contract",
+			accounts: []string{"dev-1588039999690"},
+			isError:  false,
+		},
+		// INFO: without error, HMMMMMMMM
+		{
+			name:     "Invalid contract address, user address",
+			accounts: []string{"nexeranet.testnet"},
+			isError:  false,
+		},
+		{
+			name:     "Invalid accounts id",
+			accounts: []string{"___"},
+			isError:  true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := api.ViewContractStateChanges(tt.accounts, tt.args)
+			if err != nil && !tt.isError {
+				t.Fatalf("expected not error, actual %s", err)
+			}
+			if err == nil && tt.isError {
+				t.Fatalf("Expect error, have nil")
+			}
+			if !tt.isError && result == nil {
+				t.Fatalf("Expect struct, not nil")
+			}
+		})
+	}
+}
+
+func TestViewContractStateChangesByBlockId(t *testing.T) {
+	type Test struct {
+		name     string
+		accounts []string
+		args     string
+		blockId  uint64
+		isError  bool
+	}
+	api := initTesnetApi()
+	tests := []Test{
+		{
+			name:     "Valid contract",
+			accounts: []string{"dev-1588039999690"},
+			blockId:  102118895,
+			isError:  false,
+		},
+		{
+			name:     "Invalid accounts id",
+			accounts: []string{"___"},
+			blockId:  102118895,
+			isError:  true,
+		},
+		{
+			name:     "Invalid block id",
+			accounts: []string{"dev-1588039999690"},
+			blockId:  0,
+			isError:  true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := api.ViewContractStateChangesByBlockId(tt.accounts, tt.args, tt.blockId)
+			if err != nil && !tt.isError {
+				t.Fatalf("expected not error, actual %s", err)
+			}
+			if err == nil && tt.isError {
+				t.Fatalf("Expect error, have nil")
 			}
 			if !tt.isError && result == nil {
 				t.Fatalf("Expect struct, not nil")

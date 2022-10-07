@@ -37,6 +37,22 @@ type NearApiI interface {
     GenesisConfig() (raw *types.GenesisConfigView, err error)
     ProtocolConfig() (raw *types.ProtocolConfigView, err error)
     ProtocolConfigByBlockId(blockId uint64) (raw *types.ProtocolConfigView, err error)
+    ViewAccessKeyChanges(accountId, publicKey string) (*types.AccessKeyChangesView, error)
+    ViewAccessKeyChangesByBlockId(accountId, publicKey string, blockId uint64) (*types.AccessKeyChangesView, error)
+    ViewAllAccessKeyChanges(accountIds []string) (*types.AccessKeyChangesView, error)
+    ViewAllAccessKeyChangesByBlockId(accountIds []string, blockId uint64) (*types.AccessKeyChangesView, error)
+    ViewAccountByBlockId(accountId string, blockId uint64) (*types.AccountView, error)
+    ViewAccountChanges(accountIds []string) (*types.AccountChangesView, error)
+    ViewAccountChangesByBlockId(accountIds []string, blockId uint64) (*types.AccountChangesView, error)
+    ChangesInBlock() (*types.BlockChangesView, error)
+    ChangesInBlockByHash(hash string) (*types.BlockChangesView, error)
+    ChangesInBlockById(id uint64) (*types.BlockChangesView, error)
+    ViewContractCodeChanges(accountIds []string) (raw *types.ContractCodeChangesView, err error)
+    ViewContractCodeChangesByBlockId(accountIds []string, blockId uint64) (raw *types.ContractCodeChangesView, err error)
+    ViewContractStateChanges(accountIds []string, keyPrefixBase64 string) (*types.ContractStateChangesView,  error)
+    ViewContractStateChangesByBlockId(accountIds []string, keyPrefixBase64 string, blockId uint64) (*types.ContractStateChangesView, error)
+    TxStatusWithReceipts(txHash, sender string) (*types.TxView, error)
+    ReceiptbyId(receiptId string) (*types.ViewReceipt, error)
 }
 
 func New(url string) NearApiI {

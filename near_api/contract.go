@@ -61,7 +61,7 @@ func (a *NearApi) CallContractFunc(accountId, method_name, args_base64 string) (
 	return &raw, nil
 }
 
-func (a *NearApi) ViewContractStateChanges(accountIds []string, keyPrefixBase64 string) (raw *types.ContractStateChangesView, err error) {
+func (a *NearApi) ViewContractStateChanges(accountIds []string, keyPrefixBase64 string) (*types.ContractStateChangesView, error) {
 	type Params struct {
 		ChangesType     string   `json:"changes_type"`
 		Finality        string   `json:"finality"`
@@ -78,10 +78,11 @@ func (a *NearApi) ViewContractStateChanges(accountIds []string, keyPrefixBase64 
 	if err := a.checkError(err, response); err != nil {
 		return nil, err
 	}
-	return raw, response.GetObject(raw)
+	var raw types.ContractStateChangesView
+	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ViewContractStateChangesByBlockId(accountIds []string, keyPrefixBase64 string, blockId uint64) (raw *types.ContractStateChangesView, err error) {
+func (a *NearApi) ViewContractStateChangesByBlockId(accountIds []string, keyPrefixBase64 string, blockId uint64) (*types.ContractStateChangesView, error) {
 	type Params struct {
 		ChangesType     string   `json:"changes_type"`
 		AccountIds      []string `json:"account_ids"`
@@ -98,10 +99,11 @@ func (a *NearApi) ViewContractStateChangesByBlockId(accountIds []string, keyPref
 	if err := a.checkError(err, response); err != nil {
 		return nil, err
 	}
-	return raw, response.GetObject(raw)
+	var raw types.ContractStateChangesView
+	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ViewContractCodeChanges(accountIds []string) (raw *types.ContractCodeChangesView, err error) {
+func (a *NearApi) ViewContractCodeChanges(accountIds []string) (*types.ContractCodeChangesView, error) {
 	type Params struct {
 		ChangesType string   `json:"changes_type"`
 		AccountIds  []string `json:"account_ids"`
@@ -116,10 +118,11 @@ func (a *NearApi) ViewContractCodeChanges(accountIds []string) (raw *types.Contr
 	if err := a.checkError(err, response); err != nil {
 		return nil, err
 	}
-	return raw, response.GetObject(raw)
+	var raw types.ContractCodeChangesView
+	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ViewContractCodeChangesByBlockId(accountIds []string, blockId uint64) (raw *types.ContractCodeChangesView, err error) {
+func (a *NearApi) ViewContractCodeChangesByBlockId(accountIds []string, blockId uint64) (*types.ContractCodeChangesView, error) {
 	type Params struct {
 		ChangesType string   `json:"changes_type"`
 		AccountIds  []string `json:"account_ids"`
@@ -134,5 +137,6 @@ func (a *NearApi) ViewContractCodeChangesByBlockId(accountIds []string, blockId 
 	if err := a.checkError(err, response); err != nil {
 		return nil, err
 	}
-	return raw, response.GetObject(raw)
+	var raw types.ContractCodeChangesView
+	return &raw, response.GetObject(&raw)
 }

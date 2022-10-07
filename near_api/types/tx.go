@@ -105,3 +105,19 @@ type TxView struct {
 	TransactionOutcome TransactionOutcome `json:"transaction_outcome"`
 	ReceiptsOutcome    []ReceiptOutcome   `json:"receipts_outcome"`
 }
+
+type ViewReceipt struct {
+	PredecessorID string `json:"predecessor_id"`
+	Receipt       struct {
+		Action struct {
+			Actions []interface{} `json:"actions"`
+			GasPrice            string        `json:"gas_price"`
+			InputDataIds        []interface{} `json:"input_data_ids"`
+			OutputDataReceivers []interface{} `json:"output_data_receivers"`
+			SignerID            string        `json:"signer_id"`
+			SignerPublicKey     string        `json:"signer_public_key"`
+		} `json:"Action"`
+	} `json:"receipt"`
+	ReceiptID  string `json:"receipt_id"`
+	ReceiverID string `json:"receiver_id"`
+}

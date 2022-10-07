@@ -4,7 +4,6 @@ import (
 	"testing"
 )
 
-
 func TestCheckTx(t *testing.T) {
 	type Test struct {
 		name    string
@@ -126,6 +125,85 @@ func TestSendAwaitTx(t *testing.T) {
 			}
 			if err == nil && tt.isError {
 				t.Fatalf("Test %s, Expect error, have nil", tt.name)
+			}
+		})
+	}
+}
+
+func TestTxStatusWithReceipts(t *testing.T) {
+	type Test struct {
+		name    string
+		txHash  string
+		sender  string
+		isError bool
+	}
+	api := initTesnetApi()
+	tests := []Test{
+		{
+			name:    "Base case",
+			txHash:  "CBCFeceYUgSknaV7TBjofX4Zg6geGJyZqpxcxFnnogiA",
+			sender:  "harr4.testnet",
+			isError: false,
+		},
+		{
+			name:    "invalid tx hash",
+			txHash:  "asdfasdfasfdas1241213",
+			sender:  "harr4.testnet",
+			isError: true,
+		},
+		{
+			name:    "invalid sender",
+			txHash:  "CBCFeceYUgSknaV7TBjofX4Zg6geGJyZqpxcxFnnogiA",
+			sender:  "asdfsa$$$AAA",
+			isError: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tx, err := api.TxStatusWithReceipts(tt.txHash, tt.sender)
+			if err != nil && !tt.isError {
+				t.Fatalf("Test %s, expected not error, actual %s", tt.name, err)
+			}
+			if err == nil && tt.isError {
+				t.Fatalf("Test %s, Expect error, have nil", tt.name)
+			}
+			if tx != nil && tx.Transaction.SignerID != tt.sender {
+				t.Fatalf("Test %s, Expect sender %s, have %s", tt.name, tt.sender, tx.Transaction.SignerID)
+			}
+		})
+	}
+}
+
+func TestReceiptbyId(t *testing.T) {
+	type Test struct {
+		name      string
+		receiptId string
+		isError   bool
+	}
+	api := initTesnetApi()
+	tests := []Test{
+		{
+			name:      "Base case",
+			receiptId: "Hfe4QVnXxJLMpmjKAss8SnMhHgV55ZDAfFcEavXXcqD4",
+			isError:   false,
+		},
+		{
+			name:      "invalid receipt id",
+			receiptId: "asdfsa$$$$$$$",
+			isError:   true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			result, err := api.ReceiptbyId(tt.receiptId)
+			if err != nil && !tt.isError {
+				t.Fatalf("Test %s, expected not error, actual %s", tt.name, err)
+			}
+			if err == nil && tt.isError {
+				t.Fatalf("Test %s, Expect error, have nil", tt.name)
+			}
+			if err == nil && result == nil {
+				t.Fatalf("Test %s, Error and result is nil", tt.name)
 			}
 		})
 	}

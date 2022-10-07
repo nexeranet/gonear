@@ -75,14 +75,16 @@ func (a *NearApi) ViewAccessKeyChanges(accountId, publicKey string) (*types.Acce
 	type Params struct {
 		ChangesType string `json:"changes_type"`
 		Finality    string `json:"finality"`
-		Keys        Keys   `json:"keys"`
+		Keys        []Keys `json:"keys"`
 	}
 	params := Params{
 		ChangesType: "single_access_key_changes",
 		Finality:    "final",
-		Keys: Keys{
-			AccountID: accountId,
-			PublicKey: publicKey,
+		Keys: []Keys{
+			{
+				AccountID: accountId,
+				PublicKey: publicKey,
+			},
 		},
 	}
 	response, err := a.c.Call("EXPERIMENTAL_changes", &params)
@@ -101,14 +103,16 @@ func (a *NearApi) ViewAccessKeyChangesByBlockId(accountId, publicKey string, blo
 	type Params struct {
 		ChangesType string `json:"changes_type"`
 		BlockId     uint64 `json:"block_id"`
-		Keys        Keys   `json:"keys"`
+		Keys        []Keys `json:"keys"`
 	}
 	params := Params{
 		ChangesType: "single_access_key_changes",
 		BlockId:     blockId,
-		Keys: Keys{
-			AccountID: accountId,
-			PublicKey: publicKey,
+		Keys: []Keys{
+			{
+				AccountID: accountId,
+				PublicKey: publicKey,
+			},
 		},
 	}
 	response, err := a.c.Call("EXPERIMENTAL_changes", &params)

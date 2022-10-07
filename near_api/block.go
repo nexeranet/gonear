@@ -44,7 +44,7 @@ func (a *NearApi) BlockByHash(hash string) (*types.BlockView, error) {
 	return &raw,  response.GetObject(&raw)
 }
 
-func (a *NearApi) ChangesInBlock(hash string) (*types.BlockChangesView, error) {
+func (a *NearApi) ChangesInBlock() (*types.BlockChangesView, error) {
 	type Params struct {
 		Finality string `json:"finality"`
 	}
