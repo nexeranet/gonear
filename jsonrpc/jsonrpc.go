@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
-	"strconv"
 )
 
 const (
@@ -50,7 +49,7 @@ type RPCErrorInfo struct {
 	ErrorMessage string `json:"error_message,omitempty"`
 }
 type RPCErrorCause struct {
-	Name string `json:"name"`
+	Name string                 `json:"name"`
 	Info map[string]interface{} `json:"info"`
 }
 type RPCError struct {
@@ -62,7 +61,7 @@ type RPCError struct {
 }
 
 func (e *RPCError) Error() string {
-	return strconv.Itoa(e.Code) + ":" + e.Message
+	return fmt.Sprintf("%d:%s[%v]", e.Code, e.Message, e.Data)
 }
 
 type HTTPError struct {
