@@ -4,7 +4,7 @@ import (
 	"math/big"
 
 	"github.com/nexeranet/gonear/client/types"
-	near_api_types "github.com/nexeranet/gonear/near_api/types"
+	near_api_types "github.com/nexeranet/gonear/near_rpc/types"
 )
 
 func (a *Client) SendFunctionCallTx(methodName string, args []byte, deposit *big.Int, gas uint64, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error) {

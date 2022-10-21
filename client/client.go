@@ -5,13 +5,13 @@ import (
 	"math/big"
 
 	"github.com/mr-tron/base58"
-	"github.com/nexeranet/gonear/near_api"
+	"github.com/nexeranet/gonear/near_rpc"
 	"github.com/nexeranet/gonear/client/types"
-	near_api_types "github.com/nexeranet/gonear/near_api/types"
+	near_api_types "github.com/nexeranet/gonear/near_rpc/types"
 )
 
 type IClient interface {
-	API() near_api.NearApiI
+	API() near_rpc.NearApiI
 	BalanceAt(string) (*big.Int, error)
 	CheckTx(hash, sender string) (*near_api_types.TxView, error)
 	SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error)
@@ -21,14 +21,14 @@ type IClient interface {
 }
 
 type Client struct {
-	C near_api.NearApiI
+	C near_rpc.NearApiI
 }
 
 func NewClient(url string) *Client {
-	return &Client{near_api.New(url)}
+	return &Client{near_rpc.New(url)}
 }
 
-func (a *Client) API() near_api.NearApiI {
+func (a *Client) API() near_rpc.NearApiI {
 	return a.C
 }
 
