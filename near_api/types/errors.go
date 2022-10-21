@@ -49,147 +49,164 @@ const (
 	ParseErrorCause            ErrorCause = "PARSE_ERROR"
 	GarbageCollectedBlockCause ErrorCause = "GARBAGE_COLLECTED_BLOCK"
 	InternalErrorCause         ErrorCause = "INTERNAL_ERROR"
+	NotSyncedYetCause          ErrorCause = "NOT_SYNCED_YET"
+	UnknownEpochCause          ErrorCause = "UNKNOWN_EPOCH"
+	UnknownReceiptCause        ErrorCause = "UNKNOWN_RECEIPT"
+	UnknownTransactionCause    ErrorCause = "UNKNOWN_TRANSACTION"
+	InvalidTransactionCause    ErrorCause = "INVALID_TRANSACTION"
+	TimeoutErrorCause          ErrorCause = "TIMEOUT_ERROR"
 )
 
 func ConvertError(err *jsonrpc.RPCError) error {
 	errorType := ConvertErrorType(err.Name)
 	switch ErrorCause(err.Cause.Name) {
+	case TimeoutErrorCause:
+		return &ErrorTimeoutError{
+			NearError: NewNearError(errorType, TimeoutErrorCause, err),
+		}
+	case InvalidTransactionCause:
+		return &ErrorInvalidTransaction{
+			NearError: NewNearError(errorType, InvalidTransactionCause, err),
+		}
+	case UnknownTransactionCause:
+		return &ErrorUnknownTransaction{
+			NearError: NewNearError(errorType, UnknownTransactionCause, err),
+		}
 	case UnknownBlockCause:
 		return &ErrorUnknownBlock{
-			ErrorType:  errorType,
-			ErrorCause: UnknownBlockCause,
+			NearError: NewNearError(errorType, UnknownBlockCause, err),
+		}
+	case UnknownReceiptCause:
+		return &ErrorUnknownReceipt{
+			NearError: NewNearError(errorType, UnknownReceiptCause, err),
 		}
 	case InvalidAcountCause:
 		return &ErrorInvalidAccount{
-			ErrorType:          errorType,
-			ErrorCause:         InvalidAcountCause,
+			NearError: NewNearError(errorType, InvalidAcountCause, err),
 		}
 	case UnknownAccountCause:
 		return &ErrorUnknownAccount{
-			ErrorType:  errorType,
-			ErrorCause: UnknownAccountCause,
+			NearError: NewNearError(errorType, UnknownAccountCause, err),
 		}
 	case UnavailableShardCause:
 		return &ErrorUnavailableShard{
-			ErrorType:  errorType,
-			ErrorCause: UnavailableShardCause,
+			NearError: NewNearError(errorType, UnavailableShardCause, err),
 		}
 	case NoSyncedBlocksCause:
 		return &ErrorNoSyncedBlocks{
-			ErrorType:  errorType,
-			ErrorCause: NoSyncedBlocksCause,
+			NearError: NewNearError(errorType, NoSyncedBlocksCause, err),
 		}
 	case ParseErrorCause:
 		return &ErrorParseError{
-			ErrorType:  errorType,
-			ErrorCause: ParseErrorCause,
+			NearError: NewNearError(errorType, ParseErrorCause, err),
 		}
 	case GarbageCollectedBlockCause:
 		return &ErrorGarbageCollectedBlock{
-			ErrorType:  errorType,
-			ErrorCause: GarbageCollectedBlockCause,
+			NearError: NewNearError(errorType, GarbageCollectedBlockCause, err),
 		}
 	case InternalErrorCause:
 		return &ErrorInternalError{
-			ErrorType:  errorType,
-			ErrorCause: InternalErrorCause,
+			NewNearError(errorType, InternalErrorCause, err),
+		}
+	case NotSyncedYetCause:
+		return &ErrorNotSyncedYet{
+			NewNearError(errorType, NotSyncedYetCause, err),
+		}
+	case UnknownEpochCause:
+		return &ErrorUnknownEpoch{
+			NewNearError(errorType, UnknownEpochCause, err),
 		}
 	default:
 		return &ErrorUnknownCause{
-			ErrorType:  errorType,
-			ErrorCause: UnknownCause,
+			NewNearError(errorType, UnknownCause, err),
 		}
 	}
 }
-
-type ErrorUnknownCause struct {
-	ErrorType
-	ErrorCause
-    RPCError *jsonrpc.RPCError
+func NewNearError(errorType ErrorType, cause ErrorCause, rpcErr *jsonrpc.RPCError) *NearError {
+	return &NearError{
+		ErrorType:  errorType,
+		ErrorCause: cause,
+		RPCError:   rpcErr,
+	}
 }
 
-func (e *ErrorUnknownCause) Error() string {
-    var info []string
-    // for key, value := range e.Info {
-    //     info = append(info, fmt.Sprintf("%s: %v", key, value))
-    // }
+type NearError struct {
+	ErrorType
+	ErrorCause
+	RPCError *jsonrpc.RPCError
+}
+
+func (e *NearError) Cause() ErrorCause {
+	return e.ErrorCause
+}
+
+func (e *NearError) Info() map[string]interface{} {
+	return e.RPCError.Cause.Info
+}
+
+func (e *NearError) Error() string {
+	var info []string
+	for key, value := range e.Info() {
+		info = append(info, fmt.Sprintf("%s: %v", key, value))
+	}
 	return fmt.Sprintf("%s:%s, info [%v]", e.Type(), e.Name(), strings.Join(info, ", "))
 }
 
-type ErrorUnknownBlock struct {
-	ErrorType
-	ErrorCause
+type ErrorUnknownCause struct {
+	*NearError
 }
 
-func (e *ErrorUnknownBlock) Error() string {
-	return fmt.Sprintf(
-		"%s:%s",
-		e.Type(),
-		e.Name())
+type ErrorUnknownBlock struct {
+	*NearError
 }
 
 type ErrorInvalidAccount struct {
-	ErrorType
-	ErrorCause
-}
-
-func (e *ErrorInvalidAccount) Error() string {
-	return fmt.Sprintf(
-		"%s:%s,",
-		e.Type(),
-		e.Name())
+	*NearError
 }
 
 type ErrorUnknownAccount struct {
-	ErrorType
-	ErrorCause
-}
-
-func (e *ErrorUnknownAccount) Error() string {
-	return fmt.Sprintf("%s:%s", e.Type(), e.Name())
+	*NearError
 }
 
 type ErrorUnavailableShard struct {
-	ErrorType
-	ErrorCause
-}
-
-func (e *ErrorUnavailableShard) Error() string {
-	return fmt.Sprintf("%s:%s", e.Type(), e.Name())
+	*NearError
 }
 
 type ErrorNoSyncedBlocks struct {
-	ErrorType
-	ErrorCause
-}
-
-func (e *ErrorNoSyncedBlocks) Error() string {
-	return fmt.Sprintf("%s:%s", e.Type(), e.Name())
+	*NearError
 }
 
 type ErrorParseError struct {
-	ErrorType
-	ErrorCause
-}
-
-func (e *ErrorParseError) Error() string {
-	return fmt.Sprintf("%s:%s", e.Type(), e.Name())
+	*NearError
 }
 
 type ErrorGarbageCollectedBlock struct {
-	ErrorType
-	ErrorCause
-}
-
-func (e *ErrorGarbageCollectedBlock) Error() string {
-	return fmt.Sprintf("%s:%s", e.Type(), e.Name())
+	*NearError
 }
 
 type ErrorInternalError struct {
-	ErrorType
-	ErrorCause
+	*NearError
 }
 
-func (e *ErrorInternalError) Error() string {
-	return fmt.Sprintf("%s:%s", e.Type(), e.Name())
+type ErrorNotSyncedYet struct {
+	*NearError
+}
+
+type ErrorUnknownEpoch struct {
+	*NearError
+}
+type ErrorUnknownReceipt struct {
+	*NearError
+}
+
+type ErrorUnknownTransaction struct {
+	*NearError
+}
+
+type ErrorInvalidTransaction struct {
+	*NearError
+}
+
+type ErrorTimeoutError struct {
+	*NearError
 }

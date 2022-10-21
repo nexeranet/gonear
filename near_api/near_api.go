@@ -68,7 +68,7 @@ func (a *NearApi) checkError(err error, response *jsonrpc.RPCResponse) error {
 		return err
 	}
 	if response.Error != nil {
-		return response.Error
+		return types.ConvertError(response.Error)
 	}
 	return nil
 }

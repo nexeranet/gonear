@@ -20,6 +20,10 @@ type FunctionCallPermission struct {
 	ReceiverId  string   `json:"receiver_id"`
 }
 
+func (p *Permission) IsFullAccess() bool {
+    return p.String == "FullAccess"
+}
+
 func (p *Permission) UnmarshalJSON(data []byte) error {
 	var base interface{}
 	err := json.Unmarshal(data, &base)

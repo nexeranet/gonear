@@ -1,3 +1,3 @@
 # gonear
 
-TODO: add expr methods
+A NEAR client written in Go
