@@ -1,7 +1,6 @@
 package near_rpc
 
 import (
-
 	types "github.com/nexeranet/gonear/near_rpc/types"
 )
 
@@ -15,10 +14,9 @@ func (a *NearApi) CheckTx(hash, sender string) (*types.TxView, error) {
 	if err != nil {
 		return nil, err
 	}
-    return &raw, raw.Status.CheckError()
+	return &raw, raw.Status.CheckError()
 }
 
-// signed tx in base64
 func (a *NearApi) SendAsyncTx(signedTx string) (string, error) {
 	response, err := a.c.Call("broadcast_tx_async", [1]string{signedTx})
 	if err := a.checkError(err, response); err != nil {
@@ -37,10 +35,7 @@ func (a *NearApi) SendAwaitTx(signedTx string) (*types.TxView, error) {
 	if err != nil {
 		return nil, err
 	}
-	if raw.Status.IsError() {
-		return &raw, raw.Status.Failure.Error()
-	}
-	return &raw, nil
+	return &raw, raw.Status.CheckError()
 }
 
 func (a *NearApi) TxStatusWithReceipts(txHash, sender string) (*types.TxView, error) {
@@ -53,7 +48,7 @@ func (a *NearApi) TxStatusWithReceipts(txHash, sender string) (*types.TxView, er
 	if err != nil {
 		return nil, err
 	}
-    return &raw, raw.Status.CheckError()
+	return &raw, raw.Status.CheckError()
 }
 
 func (a *NearApi) ReceiptbyId(receiptId string) (*types.ViewReceipt, error) {

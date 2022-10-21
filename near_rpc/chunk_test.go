@@ -1,14 +1,17 @@
 package near_rpc
 
 import (
+	"reflect"
 	"testing"
+
+	types "github.com/nexeranet/gonear/near_rpc/types"
 )
 
 func TestChunkDetailsByHash(t *testing.T) {
 	type Test struct {
 		name    string
 		hash    string
-		isError bool
+		errType error
 	}
 
 	api := initTesnetApi()
@@ -16,33 +19,36 @@ func TestChunkDetailsByHash(t *testing.T) {
 		{
 			name:    "Valid chunk hash",
 			hash:    "7dXNhXe9KRREZFTpD94jFKmgfyLTAD3TBWEoFAX5JtYh",
-			isError: false,
+			errType: &types.ErrorUnknownChunk{},
 		},
 		{
 			name:    "Invalid chunk hash",
 			hash:    "SSSSSS",
-			isError: true,
+			errType: &types.ErrorParseError{},
 		},
 		{
 			name:    "Chunk not found",
 			hash:    "EBM2qg5cGr47EjMPtH88uvmXHDHqmWPzKaQadbWhdw22",
-			isError: true,
+			errType: &types.ErrorUnknownChunk{},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result, err := api.ChunkDetailsByHash(tt.hash)
-			if err != nil && !tt.isError {
-				t.Fatalf("expected not error, actual %s", err)
-			}
-			if err == nil && tt.isError {
-				t.Fatalf("Expect error, have nil")
-			}
-			if !tt.isError && result == nil {
-				t.Fatalf("Expect struct, not nil")
-			}
-			if result != nil && result.Header.ChunkHash != tt.hash {
-				t.Fatalf("Chank hash is not equal, result: %s, argument %s", result.Header.ChunkHash, tt.hash)
+			if err != nil {
+				expect := reflect.TypeOf(tt.errType)
+				have := reflect.TypeOf(err)
+				if have != expect {
+					t.Fatalf("Unexpected error %s, have type: %s, expect type %#v",
+						err,
+						have.String(),
+						expect,
+					)
+				}
+			} else {
+				if result == nil {
+					t.Fatalf("Expect struct, not nil")
+				}
 			}
 		})
 	}
@@ -53,40 +59,46 @@ func TestChunkDetailsByIds(t *testing.T) {
 		name    string
 		blockId uint64
 		shardId uint64
-		isError bool
+        errType error
 	}
 
 	api := initTesnetApi()
 	tests := []Test{
 		{
 			name:    "Valid block id and shard id",
-			isError: false,
 			shardId: 1,
 			blockId: 100655760,
+			errType: &types.ErrorUnknownBlock{},
 		},
 		{
 			name:    "Invalid block id",
-			isError: true,
 			blockId: 0,
+			errType: &types.ErrorUnknownBlock{},
 		},
 		{
 			name:    "Chunk not found",
-			isError: true,
 			blockId: 58934027,
 			shardId: 0,
+			errType: &types.ErrorUnknownBlock{},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result, err := api.ChunkDetailsByIds(tt.blockId, tt.shardId)
-			if err != nil && !tt.isError {
-				t.Fatalf("expected not error, actual %s", err)
-			}
-			if err == nil && tt.isError {
-				t.Fatalf("Expect error, have nil")
-			}
-			if !tt.isError && result == nil {
-				t.Fatalf("Expect struct, not nil")
+			if err != nil {
+				expect := reflect.TypeOf(tt.errType)
+				have := reflect.TypeOf(err)
+				if have != expect {
+					t.Fatalf("Unexpected error %s, have type: %s, expect type %#v",
+						err,
+						have.String(),
+						expect,
+					)
+				}
+			} else {
+				if result == nil {
+					t.Fatalf("Expect struct, not nil")
+				}
 			}
 		})
 	}

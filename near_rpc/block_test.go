@@ -1,7 +1,10 @@
 package near_rpc
 
 import (
+	"reflect"
 	"testing"
+
+	types "github.com/nexeranet/gonear/near_rpc/types"
 )
 
 func TestBlock(t *testing.T) {
@@ -19,38 +22,44 @@ func TestBlockByNumber(t *testing.T) {
 	type Test struct {
 		name    string
 		number  uint64
-		isError bool
+        errType error
 	}
 	api := initTesnetApi()
     tests := []Test{
         {
             name:"Valid block number",
             number: 100655760,
-            isError: false,
+			errType: &types.ErrorUnknownBlock{},
         },
         {
             name:"Invalid block number",
             number: 100,
-            isError: true,
+			errType: &types.ErrorUnknownBlock{},
         },
         {
             name:"Block number not found",
             number: 17821130,
-            isError: true,
+			errType: &types.ErrorUnknownBlock{},
         },
     }
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-            block, err := api.BlockByNumber(tt.number)
-			if err != nil && !tt.isError {
-				t.Fatalf("expected not error, actual %s", err)
+            result, err := api.BlockByNumber(tt.number)
+			if err != nil {
+				expect := reflect.TypeOf(tt.errType)
+				have := reflect.TypeOf(err)
+				if have != expect {
+					t.Fatalf("Unexpected error %s, have type: %s, expect type %#v",
+                        err,
+						have.String(),
+						expect,
+					)
+				}
+			} else {
+				if result == nil {
+					t.Fatalf("Expect struct, not nil")
+				}
 			}
-			if err == nil && tt.isError {
-				t.Fatalf("Expect error, have nil")
-			}
-            if !tt.isError && block == nil {
-				t.Fatalf("Expect struct, not nil")
-            }
         })
     }
 }
@@ -59,38 +68,44 @@ func TestBlockByHash(t *testing.T) {
 	type Test struct {
 		name    string
 		hash  string
-		isError bool
+        errType error
 	}
 	api := initTesnetApi()
     tests := []Test{
         {
             name:"Valid block hash",
             hash: "AVXswVKwfAsUAqfFY3feMgf7GanN6GwPYtgnPiifWQGS",
-            isError: false,
+			errType: &types.ErrorUnknownBlock{},
         },
         {
             name:"Invalid block hash",
             hash: "SSSSSS",
-            isError: true,
+			errType: &types.ErrorParseError{},
         },
         {
             name:"Block hash not found",
             hash: "7nsuuitwS7xcdGnD9JgrE22cRB2vf2VS4yh1N9S71F4d",
-            isError: true,
+			errType: &types.ErrorUnknownBlock{},
         },
     }
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-            block, err := api.BlockByHash(tt.hash)
-			if err != nil && !tt.isError {
-				t.Fatalf("expected not error, actual %s", err)
+            result, err := api.BlockByHash(tt.hash)
+			if err != nil {
+				expect := reflect.TypeOf(tt.errType)
+				have := reflect.TypeOf(err)
+				if have != expect {
+					t.Fatalf("Unexpected error %s, have type: %s, expect type %#v",
+                        err,
+						have.String(),
+						expect,
+					)
+				}
+			} else {
+				if result == nil {
+					t.Fatalf("Expect struct, not nil")
+				}
 			}
-			if err == nil && tt.isError {
-				t.Fatalf("Expect error, have nil")
-			}
-            if !tt.isError && block == nil {
-				t.Fatalf("Expect struct, not nil")
-            }
         })
     }
 }
@@ -110,38 +125,44 @@ func TestChangesInBlockByHash(t *testing.T) {
 	type Test struct {
 		name    string
 		hash  string
-		isError bool
+        errType error
 	}
 	api := initTesnetApi()
     tests := []Test{
         {
             name:"Valid hash block",
             hash: "8uC449X4YtJXaCVo2NfS2LMvEhv769joDXEo8uzLuJE4",
-            isError: false,
+			errType: &types.ErrorUnknownBlock{},
         },
         {
             name:"Invalid hash",
             hash: "asdfasdfasdf$$$$$$",
-            isError: true,
+			errType: &types.ErrorParseError{},
         },
         {
             name:"Block not found",
             hash: "8uC449X4YtJXaCVo2NfS2LMvEhv769joDXEo8uzLuW33",
-            isError: true,
+			errType: &types.ErrorUnknownBlock{},
         },
     }
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-            block, err := api.ChangesInBlockByHash(tt.hash)
-			if err != nil && !tt.isError {
-				t.Fatalf("expected not error, actual %s", err)
+            result, err := api.ChangesInBlockByHash(tt.hash)
+			if err != nil {
+				expect := reflect.TypeOf(tt.errType)
+				have := reflect.TypeOf(err)
+				if have != expect {
+					t.Fatalf("Unexpected error %s, have type: %s, expect type %#v",
+                        err,
+						have.String(),
+						expect,
+					)
+				}
+			} else {
+				if result == nil {
+					t.Fatalf("Expect struct, not nil")
+				}
 			}
-			if err == nil && tt.isError {
-				t.Fatalf("Expect error, have nil")
-			}
-            if !tt.isError && block == nil {
-				t.Fatalf("Expect struct, not nil")
-            }
         })
     }
 }
@@ -151,38 +172,44 @@ func TestChangesInBlockById(t *testing.T) {
 	type Test struct {
 		name    string
         id uint64
-		isError bool
+        errType error
 	}
 	api := initTesnetApi()
     tests := []Test{
         {
             name:"Valid block",
             id: 102109027,
-            isError: false,
+			errType: &types.ErrorUnknownBlock{},
         },
         {
             name:"Invalid id",
             id: 0,
-            isError: true,
+			errType: &types.ErrorUnknownBlock{},
         },
         {
             name:"Block not found",
             id: 1,
-            isError: true,
+			errType: &types.ErrorUnknownBlock{},
         },
     }
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-            block, err := api.ChangesInBlockById(tt.id)
-			if err != nil && !tt.isError {
-				t.Fatalf("expected not error, actual %s", err)
+            result, err := api.ChangesInBlockById(tt.id)
+			if err != nil {
+				expect := reflect.TypeOf(tt.errType)
+				have := reflect.TypeOf(err)
+				if have != expect {
+					t.Fatalf("Unexpected error %s, have type: %s, expect type %#v",
+                        err,
+						have.String(),
+						expect,
+					)
+				}
+			} else {
+				if result == nil {
+					t.Fatalf("Expect struct, not nil")
+				}
 			}
-			if err == nil && tt.isError {
-				t.Fatalf("Expect error, have nil")
-			}
-            if !tt.isError && block == nil {
-				t.Fatalf("Expect struct, not nil")
-            }
         })
     }
 }

@@ -55,11 +55,21 @@ const (
 	UnknownTransactionCause    ErrorCause = "UNKNOWN_TRANSACTION"
 	InvalidTransactionCause    ErrorCause = "INVALID_TRANSACTION"
 	TimeoutErrorCause          ErrorCause = "TIMEOUT_ERROR"
+	UnknownChunkCause          ErrorCause = "UNKNOWN_CHUNK"
+	InvalidShardIdCause        ErrorCause = "INVALID_SHARD_ID"
 )
 
 func ConvertError(err *jsonrpc.RPCError) error {
 	errorType := ConvertErrorType(err.Name)
 	switch ErrorCause(err.Cause.Name) {
+    case InvalidShardIdCause:
+        return &ErrorInvalidShardId{
+			NearError: NewNearError(errorType, InvalidShardIdCause, err),
+        }
+	case UnknownChunkCause:
+		return &ErrorUnknownChunk{
+			NearError: NewNearError(errorType, UnknownChunkCause, err),
+		}
 	case TimeoutErrorCause:
 		return &ErrorTimeoutError{
 			NearError: NewNearError(errorType, TimeoutErrorCause, err),
@@ -208,5 +218,12 @@ type ErrorInvalidTransaction struct {
 }
 
 type ErrorTimeoutError struct {
+	*NearError
+}
+type ErrorUnknownChunk struct {
+	*NearError
+}
+
+type ErrorInvalidShardId struct {
 	*NearError
 }
