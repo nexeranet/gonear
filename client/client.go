@@ -5,8 +5,8 @@ import (
 	"math/big"
 
 	"github.com/mr-tron/base58"
-	"github.com/nexeranet/gonear/near_rpc"
 	"github.com/nexeranet/gonear/client/types"
+	"github.com/nexeranet/gonear/near_rpc"
 	near_api_types "github.com/nexeranet/gonear/near_rpc/types"
 )
 
@@ -16,8 +16,8 @@ type IClient interface {
 	CheckTx(hash, sender string) (*near_api_types.TxView, error)
 	SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error)
 	SendFunctionCallTx(methodName string, args []byte, amount, gas *big.Int, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error)
-    SendActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (*near_api_types.TxView, error)
-    AsyncSendActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (string, error)
+	SendActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (*near_api_types.TxView, error)
+	AsyncSendActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (string, error)
 }
 
 type Client struct {
@@ -51,14 +51,14 @@ func (a *Client) validateAccess(account, publicKey string) (nonce uint64, blockH
 	if err != nil {
 		return nonce, blockHash, err
 	}
-    // TODO: if this condition is needed or not?
+	// TODO: if this condition is needed or not?
 	if !access_key.Permission.IsFullAccess() {
 		return nonce, blockHash, fmt.Errorf("`Account %s does not have permission to send tokens using key: %s", account, publicKey)
 	}
 	nonce = access_key.Nonce + 1
-    hash, err := base58.Decode(access_key.BlockHash)
+	hash, err := base58.Decode(access_key.BlockHash)
 	if err != nil {
 		return nonce, blockHash, err
 	}
-    return nonce, *(*[32]byte)(hash), nil
+	return nonce, *(*[32]byte)(hash), nil
 }
