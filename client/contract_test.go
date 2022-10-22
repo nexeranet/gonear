@@ -51,7 +51,7 @@ func TestClient__SendCallFunctionTx(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			tx, err := client.SendFunctionCallTx("ft_transfer", bytes, big.NewInt(1), tt.gas, key, pubKey, tt.addrFrom, tt.addrTo)
+			tx, err := client.FunctionCallTx("ft_transfer", bytes, big.NewInt(1), tt.gas, key, pubKey, tt.addrFrom, tt.addrTo)
 			if err != nil && !tt.isError {
 				t.Fatalf("expected not error, actual %s", err)
 			}

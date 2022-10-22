@@ -7,7 +7,7 @@ import (
 	near_api_types "github.com/nexeranet/gonear/near_rpc/types"
 )
 
-func (a *Client) SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error) {
+func (a *Client) TransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error) {
 	nonce, blockHash, err := a.validateAccess(addrFrom, publicKey)
 	if err != nil {
 		return nil, err

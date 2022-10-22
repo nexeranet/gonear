@@ -11,13 +11,14 @@ import (
 )
 
 type IClient interface {
-	API() near_rpc.NearApiI
+	Rpc() near_rpc.NearApiI
 	BalanceAt(string) (*big.Int, error)
 	CheckTx(hash, sender string) (*near_api_types.TxView, error)
-	SendTransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error)
-	SendFunctionCallTx(methodName string, args []byte, amount, gas *big.Int, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error)
-	SendActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (*near_api_types.TxView, error)
-	AsyncSendActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (string, error)
+	TransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error)
+	FunctionCallTx(methodName string, args []byte, amount, gas *big.Int, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error)
+	ActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (*near_api_types.TxView, error)
+	AsyncActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (string, error)
+	CallContractFunc(accountId, method_name, args_base64 string) (*near_api_types.ContractFuncResult, error)
 }
 
 type Client struct {
@@ -28,8 +29,12 @@ func NewClient(url string) *Client {
 	return &Client{near_rpc.New(url)}
 }
 
-func (a *Client) API() near_rpc.NearApiI {
+func (a *Client) Rpc() near_rpc.NearApiI {
 	return a.C
+}
+
+func (a *Client) CallContractFunc(accountId, method_name, args_base64 string) (*near_api_types.ContractFuncResult, error) {
+	return a.C.CallContractFunc(accountId, method_name, args_base64)
 }
 
 func (a *Client) CheckTx(hash, sender string) (*near_api_types.TxView, error) {
