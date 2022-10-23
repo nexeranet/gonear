@@ -1,5 +1,6 @@
 package near_rpc
 
+//go:generate mockgen -source near_rpc.go -destination mocks/near_rpc.go
 import (
 	"github.com/nexeranet/gonear/jsonrpc"
 	types "github.com/nexeranet/gonear/near_rpc/types"

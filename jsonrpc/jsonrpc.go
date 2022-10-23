@@ -1,5 +1,7 @@
 package jsonrpc
 
+//go:generate mockgen -source jsonrpc.go -destination mocks/jsonrpc.go.go
+
 import (
 	"bytes"
 	"encoding/json"
