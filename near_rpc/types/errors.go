@@ -62,10 +62,10 @@ const (
 func ConvertError(err *jsonrpc.RPCError) error {
 	errorType := ConvertErrorType(err.Name)
 	switch ErrorCause(err.Cause.Name) {
-    case InvalidShardIdCause:
-        return &ErrorInvalidShardId{
+	case InvalidShardIdCause:
+		return &ErrorInvalidShardId{
 			NearError: NewNearError(errorType, InvalidShardIdCause, err),
-        }
+		}
 	case UnknownChunkCause:
 		return &ErrorUnknownChunk{
 			NearError: NewNearError(errorType, UnknownChunkCause, err),

@@ -204,7 +204,6 @@ func TestViewContractCodeChangesByBlockId(t *testing.T) {
 			blockId:  103143176,
 			errType: &types.ErrorUnknownBlock{},
 		},
-		// INFO: without error, HMMMMMMMM
 		{
 			name:     "Invalid contract address, user address",
 			accounts: []string{"nexeranet.testnet"},

@@ -1,7 +1,6 @@
 package client
 
 import (
-	"fmt"
 	"math/big"
 
 	"github.com/mr-tron/base58"
@@ -57,9 +56,9 @@ func (a *Client) validateAccess(account, publicKey string) (nonce uint64, blockH
 		return nonce, blockHash, err
 	}
 	// TODO: if this condition is needed or not?
-	if !access_key.Permission.IsFullAccess() {
-		return nonce, blockHash, fmt.Errorf("`Account %s does not have permission to send tokens using key: %s", account, publicKey)
-	}
+	// if !access_key.Permission.IsFullAccess() {
+	// 	return nonce, blockHash, fmt.Errorf("`Account %s does not have permission to send tokens using key: %s", account, publicKey)
+	// }
 	nonce = access_key.Nonce + 1
 	hash, err := base58.Decode(access_key.BlockHash)
 	if err != nil {
