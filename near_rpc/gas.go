@@ -5,8 +5,8 @@ import (
 )
 
 func (a *NearApi) GasPriceByHeight(height uint64) (*types.GasPriceView, error) {
-	response, err := a.c.Call("gas_price", [1]uint64{height})
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("gas_price", [1]uint64{height})
+	if err != nil {
 		return nil, err
 	}
 	var raw types.GasPriceView
@@ -14,8 +14,8 @@ func (a *NearApi) GasPriceByHeight(height uint64) (*types.GasPriceView, error) {
 }
 
 func (a *NearApi) GasPriceByHash(hash string) (*types.GasPriceView, error) {
-	response, err := a.c.Call("gas_price", [1]string{hash})
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("gas_price", [1]string{hash})
+	if err != nil {
 		return nil, err
 	}
 	var raw types.GasPriceView
@@ -23,8 +23,8 @@ func (a *NearApi) GasPriceByHash(hash string) (*types.GasPriceView, error) {
 }
 
 func (a *NearApi) GasPrice() (*types.GasPriceView, error) {
-	response, err := a.c.Call("gas_price", []interface{}{nil})
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("gas_price", []interface{}{nil})
+	if err != nil {
 		return nil, err
 	}
 	var raw types.GasPriceView

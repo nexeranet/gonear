@@ -5,11 +5,11 @@ import (
 )
 
 func (a *NearApi) GenesisConfig() (*types.GenesisConfigView, error) {
-	response, err := a.c.Call("EXPERIMENTAL_genesis_config")
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_genesis_config")
+	if err != nil {
 		return nil, err
 	}
-    var raw types.GenesisConfigView
+	var raw types.GenesisConfigView
 	return &raw, response.GetObject(&raw)
 }
 
@@ -18,11 +18,11 @@ func (a *NearApi) ProtocolConfig() (*types.ProtocolConfigView, error) {
 		Finality string `json:"finality"`
 	}
 	params := &Params{"final"}
-	response, err := a.c.Call("EXPERIMENTAL_protocol_config", params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_protocol_config", params)
+	if err != nil {
 		return nil, err
 	}
-    var raw types.ProtocolConfigView
+	var raw types.ProtocolConfigView
 	return &raw, response.GetObject(&raw)
 }
 
@@ -31,10 +31,10 @@ func (a *NearApi) ProtocolConfigByBlockId(blockId uint64) (*types.ProtocolConfig
 		BlockId uint64 `json:"block_id"`
 	}
 	params := &Params{blockId}
-	response, err := a.c.Call("EXPERIMENTAL_protocol_config", params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_protocol_config", params)
+	if err != nil {
 		return nil, err
 	}
-    var raw types.ProtocolConfigView
+	var raw types.ProtocolConfigView
 	return &raw, response.GetObject(&raw)
 }

@@ -1,7 +1,6 @@
 package near_rpc
 
 import (
-	"fmt"
 	"reflect"
 	"testing"
 
@@ -175,7 +174,6 @@ func TestViewContractCodeChanges(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			block, err := api.ViewContractCodeChanges(tt.accounts)
-			fmt.Println(err)
 			if err != nil && !tt.isError {
 				t.Fatalf("expected not error, actual %s", err)
 			}

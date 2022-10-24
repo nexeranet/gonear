@@ -14,7 +14,7 @@ type IClient interface {
 	BalanceAt(string) (*big.Int, error)
 	CheckTx(hash, sender string) (*near_api_types.TxView, error)
 	TransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error)
-	FunctionCallTx(methodName string, args []byte, amount, gas *big.Int, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error)
+	FunctionCallTx(methodName string, args []byte, amount *big.Int, gas uint64, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error)
 	ActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (*near_api_types.TxView, error)
 	AsyncActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (string, error)
 	CallContractFunc(accountId, method_name, args_base64 string) (*near_api_types.ContractFuncResult, error)
@@ -26,6 +26,9 @@ type Client struct {
 
 func NewClient(url string) *Client {
 	return &Client{near_rpc.New(url)}
+}
+func NewIClient(url string) IClient {
+	return NewClient(url)
 }
 
 func (a *Client) Rpc() near_rpc.NearApiI {

@@ -9,8 +9,8 @@ func (a *NearApi) ChunkDetailsByHash(hash string)  (*types.ChunkDetailsView, err
 		ChunkId string `json:"chunk_id"`
 	}
 	params := &Params{hash}
-	response, err := a.c.Call("chunk", params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("chunk", params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.ChunkDetailsView
@@ -23,8 +23,8 @@ func (a *NearApi) ChunkDetailsByIds(blockId, shardId uint64)  (*types.ChunkDetai
         ShardID uint64 `json:"shard_id"`
 	}
 	params := &Params{blockId, shardId}
-	response, err := a.c.Call("chunk", params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("chunk", params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.ChunkDetailsView

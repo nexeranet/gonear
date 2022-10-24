@@ -5,7 +5,7 @@ import (
 	near_rpc_types "github.com/nexeranet/gonear/near_rpc/types"
 )
 
-func (a *Client) SendActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (*near_rpc_types.TxView, error) {
+func (a *Client) ActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (*near_rpc_types.TxView, error) {
 	nonce, blockHash, err := a.validateAccess(addrFrom, publicKey)
 	if err != nil {
 		return nil, err
@@ -17,7 +17,7 @@ func (a *Client) SendActionsTx(key, publicKey, addrFrom, addrTo string, actions 
 	return a.C.SendAwaitTx(data)
 }
 
-func (a *Client) AsyncSendActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (string, error) {
+func (a *Client) AsyncActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (string, error) {
 	nonce, blockHash, err := a.validateAccess(addrFrom, publicKey)
 	if err != nil {
 		return "", err

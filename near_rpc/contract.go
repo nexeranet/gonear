@@ -13,8 +13,8 @@ func (a *NearApi) ViewContractCode(accountId string) (*types.ContractCodeView, e
 		AccountID   string `json:"account_id"`
 	}
 	params := Params{"view_code", "final", accountId}
-	response, err := a.c.Call("query", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("query", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.ContractCodeView
@@ -29,8 +29,8 @@ func (a *NearApi) ViewContractState(accountId, prefixBase64 string) (*types.Cont
 		PrefixBase64 string `json:"prefix_base64"`
 	}
 	params := Params{"view_code", "final", accountId, prefixBase64}
-	response, err := a.c.Call("query", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("query", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.ContractStateView
@@ -46,8 +46,8 @@ func (a *NearApi) CallContractFunc(accountId, method_name, args_base64 string) (
 		ArgsBase64  string `json:"args_base64"`
 	}
 	params := Params{"call_function", "final", accountId, method_name, args_base64}
-	response, err := a.c.Call("query", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("query", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.ContractFuncResult
@@ -74,8 +74,8 @@ func (a *NearApi) ViewContractStateChanges(accountIds []string, keyPrefixBase64 
 		AccountIds:      accountIds,
 		KeyPrefixBase64: keyPrefixBase64,
 	}
-	response, err := a.c.Call("EXPERIMENTAL_changes", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_changes", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.ContractStateChangesView
@@ -95,8 +95,8 @@ func (a *NearApi) ViewContractStateChangesByBlockId(accountIds []string, keyPref
 		KeyPrefixBase64: keyPrefixBase64,
 		BlockId:         blockId,
 	}
-	response, err := a.c.Call("EXPERIMENTAL_changes", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_changes", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.ContractStateChangesView
@@ -114,8 +114,8 @@ func (a *NearApi) ViewContractCodeChanges(accountIds []string) (*types.ContractC
 		AccountIds:  accountIds,
 		Finality:    "final",
 	}
-	response, err := a.c.Call("EXPERIMENTAL_changes", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_changes", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.ContractCodeChangesView
@@ -133,8 +133,8 @@ func (a *NearApi) ViewContractCodeChangesByBlockId(accountIds []string, blockId 
 		AccountIds:  accountIds,
 		BlockId:     blockId,
 	}
-	response, err := a.c.Call("EXPERIMENTAL_changes", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_changes", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.ContractCodeChangesView

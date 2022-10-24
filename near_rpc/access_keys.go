@@ -6,6 +6,7 @@ import (
 	types "github.com/nexeranet/gonear/near_rpc/types"
 )
 
+// View access key for final block blockchain
 func (a *NearApi) ViewAccessKey(account, publicKey string) (*types.AccessKeysView, error) {
 	type Params struct {
 		RequestType string `json:"request_type"`
@@ -14,8 +15,8 @@ func (a *NearApi) ViewAccessKey(account, publicKey string) (*types.AccessKeysVie
 		PublicKey   string `json:"public_key"`
 	}
 	params := Params{"view_access_key", "final", account, publicKey}
-	response, err := a.c.Call("query", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("query", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.AccessKeysView
@@ -29,6 +30,7 @@ func (a *NearApi) ViewAccessKey(account, publicKey string) (*types.AccessKeysVie
 	return &raw, nil
 }
 
+// View access key with specific block id (uint64) block blockchain
 func (a *NearApi) ViewAccessKeyByBlockId(account, publicKey string, blockId uint64) (*types.AccessKeysView, error) {
 	type Params struct {
 		RequestType string `json:"request_type"`
@@ -38,7 +40,7 @@ func (a *NearApi) ViewAccessKeyByBlockId(account, publicKey string, blockId uint
 	}
 	params := Params{"view_access_key", account, publicKey, blockId}
 	response, err := a.c.Call("query", &params)
-	if err := a.checkError(err, response); err != nil {
+	if err != nil {
 		return nil, err
 	}
 	var raw types.AccessKeysView
@@ -52,6 +54,7 @@ func (a *NearApi) ViewAccessKeyByBlockId(account, publicKey string, blockId uint
 	return &raw, nil
 }
 
+// View access key with specific block id (uint64) block blockchain
 func (a *NearApi) ViewAccessKeyList(account string) (*types.AccessKeysListViev, error) {
 	type Params struct {
 		RequestType string `json:"request_type"`
@@ -59,8 +62,8 @@ func (a *NearApi) ViewAccessKeyList(account string) (*types.AccessKeysListViev, 
 		AccountID   string `json:"account_id"`
 	}
 	params := Params{"view_access_key_list", "final", account}
-	response, err := a.c.Call("query", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("query", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.AccessKeysListViev
@@ -87,8 +90,8 @@ func (a *NearApi) ViewAccessKeyChanges(accountId, publicKey string) (*types.Acce
 			},
 		},
 	}
-	response, err := a.c.Call("EXPERIMENTAL_changes", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_changes", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.AccessKeyChangesView
@@ -115,8 +118,8 @@ func (a *NearApi) ViewAccessKeyChangesByBlockId(accountId, publicKey string, blo
 			},
 		},
 	}
-	response, err := a.c.Call("EXPERIMENTAL_changes", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_changes", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.AccessKeyChangesView
@@ -134,8 +137,8 @@ func (a *NearApi) ViewAllAccessKeyChanges(accountIds []string) (*types.AccessKey
 		Finality:    "final",
 		AccountIds:  accountIds,
 	}
-	response, err := a.c.Call("EXPERIMENTAL_changes", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_changes", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.AccessKeyChangesView
@@ -153,8 +156,8 @@ func (a *NearApi) ViewAllAccessKeyChangesByBlockId(accountIds []string, blockId 
 		BlockId:     blockId,
 		AccountIds:  accountIds,
 	}
-	response, err := a.c.Call("EXPERIMENTAL_changes", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_changes", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.AccessKeyChangesView

@@ -9,8 +9,8 @@ func (a *NearApi) Block() (*types.BlockView, error) {
 		Finality string `json:"finality"`
 	}
 	params := &Params{"final"}
-	response, err := a.c.Call("block", params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("block", params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.BlockView
@@ -22,8 +22,8 @@ func (a *NearApi) BlockByNumber(number uint64) (*types.BlockView, error) {
 		BlockId uint64 `json:"block_id"`
 	}
 	params := &Params{number}
-	response, err := a.c.Call("block", params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("block", params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.BlockView
@@ -35,8 +35,8 @@ func (a *NearApi) BlockByHash(hash string) (*types.BlockView, error) {
 		BlockId string `json:"block_id"`
 	}
 	params := &Params{hash}
-	response, err := a.c.Call("block", params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("block", params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.BlockView
@@ -48,8 +48,8 @@ func (a *NearApi) ChangesInBlock() (*types.BlockChangesView, error) {
 		Finality string `json:"finality"`
 	}
 	params := &Params{"final"}
-	response, err := a.c.Call("EXPERIMENTAL_changes_in_block", params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_changes_in_block", params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.BlockChangesView
@@ -61,8 +61,8 @@ func (a *NearApi) ChangesInBlockByHash(hash string) (*types.BlockChangesView, er
 		BlockId string `json:"block_id"`
 	}
 	params := &Params{hash}
-	response, err := a.c.Call("EXPERIMENTAL_changes_in_block", params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_changes_in_block", params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.BlockChangesView
@@ -74,8 +74,8 @@ func (a *NearApi) ChangesInBlockById(id uint64) (*types.BlockChangesView, error)
 		BlockId uint64 `json:"block_id"`
 	}
 	params := &Params{id}
-	response, err := a.c.Call("EXPERIMENTAL_changes_in_block", params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_changes_in_block", params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.BlockChangesView

@@ -25,6 +25,7 @@ func validatePrivateKey(key string) ([]byte, error) {
 		return nil, fmt.Errorf("Invalid encoded key format, must be <curve>:<encoded key>'")
 	}
 }
+
 func getKeys(key string) (publicKey *[32]byte, privateKey *[64]byte, err error) {
 	validKey, err := validatePrivateKey(key)
 	if err != nil {
@@ -34,6 +35,7 @@ func getKeys(key string) (publicKey *[32]byte, privateKey *[64]byte, err error) 
 	return public, private, err
 }
 
+// Generate base64 signed transaction hash
 func GenerateActionsTransactionHash(addrFrom, addrTo, key string, nonce uint64, blockHash [32]byte, actions []types.Action) (string, error) {
 	publicKey, privKey, err := getKeys(key)
 	if err != nil {

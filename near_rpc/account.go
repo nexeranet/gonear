@@ -11,8 +11,8 @@ func (a *NearApi) ViewAccount(accountId string) (*types.AccountView, error) {
 		AccountID   string `json:"account_id"`
 	}
 	params := Params{"view_account", "final", accountId}
-	response, err := a.c.Call("query", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("query", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.AccountView
@@ -26,8 +26,8 @@ func (a *NearApi) ViewAccountByBlockId(accountId string, blockId uint64) (*types
 		AccountID   string `json:"account_id"`
 	}
 	params := Params{"view_account", blockId, accountId}
-	response, err := a.c.Call("query", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("query", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.AccountView
@@ -41,8 +41,8 @@ func (a *NearApi) ViewAccountChanges(accountIds []string) (*types.AccountChanges
 		AccountIds  []string `json:"account_ids"`
 	}
 	params := Params{"account_changes", "final", accountIds}
-	response, err := a.c.Call("EXPERIMENTAL_changes", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_changes", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.AccountChangesView
@@ -56,8 +56,8 @@ func (a *NearApi) ViewAccountChangesByBlockId(accountIds []string, blockId uint6
 		BlockId     uint64   `json:"block_id"`
 	}
 	params := Params{"account_changes", accountIds, blockId}
-	response, err := a.c.Call("EXPERIMENTAL_changes", &params)
-	if err := a.checkError(err, response); err != nil {
+	response, err := a.Call("EXPERIMENTAL_changes", &params)
+	if err != nil {
 		return nil, err
 	}
 	var raw types.AccountChangesView

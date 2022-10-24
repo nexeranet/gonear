@@ -1,3 +1,6 @@
+// Near rpc api client (only rpc methods)
+//
+// The RPC API allows you to communicate directly with the NEAR network.
 package near_rpc
 
 //go:generate mockgen -source near_rpc.go -destination mocks/near_rpc.go
@@ -12,8 +15,9 @@ type NearApi struct {
 }
 
 type NearApiI interface {
+	Call(method string, params ...interface{}) (*jsonrpc.RPCResponse, error)
 	ViewAccessKey(account, publicKey string) (*types.AccessKeysView, error)
-    ViewAccessKeyByBlockId(account, publicKey string, blockId uint64) (*types.AccessKeysView, error)
+	ViewAccessKeyByBlockId(account, publicKey string, blockId uint64) (*types.AccessKeysView, error)
 	ViewAccessKeyList(account string) (*types.AccessKeysListViev, error)
 	ViewAccount(accountId string) (*types.AccountView, error)
 	Block() (*types.BlockView, error)
@@ -35,25 +39,25 @@ type NearApiI interface {
 	CheckTx(hash, sender string) (*types.TxView, error)
 	SendAsyncTx(signedTx string) (string, error)
 	SendAwaitTx(signedTx string) (*types.TxView, error)
-    GenesisConfig() (raw *types.GenesisConfigView, err error)
-    ProtocolConfig() (raw *types.ProtocolConfigView, err error)
-    ProtocolConfigByBlockId(blockId uint64) (raw *types.ProtocolConfigView, err error)
-    ViewAccessKeyChanges(accountId, publicKey string) (*types.AccessKeyChangesView, error)
-    ViewAccessKeyChangesByBlockId(accountId, publicKey string, blockId uint64) (*types.AccessKeyChangesView, error)
-    ViewAllAccessKeyChanges(accountIds []string) (*types.AccessKeyChangesView, error)
-    ViewAllAccessKeyChangesByBlockId(accountIds []string, blockId uint64) (*types.AccessKeyChangesView, error)
-    ViewAccountByBlockId(accountId string, blockId uint64) (*types.AccountView, error)
-    ViewAccountChanges(accountIds []string) (*types.AccountChangesView, error)
-    ViewAccountChangesByBlockId(accountIds []string, blockId uint64) (*types.AccountChangesView, error)
-    ChangesInBlock() (*types.BlockChangesView, error)
-    ChangesInBlockByHash(hash string) (*types.BlockChangesView, error)
-    ChangesInBlockById(id uint64) (*types.BlockChangesView, error)
-    ViewContractCodeChanges(accountIds []string) (raw *types.ContractCodeChangesView, err error)
-    ViewContractCodeChangesByBlockId(accountIds []string, blockId uint64) (raw *types.ContractCodeChangesView, err error)
-    ViewContractStateChanges(accountIds []string, keyPrefixBase64 string) (*types.ContractStateChangesView,  error)
-    ViewContractStateChangesByBlockId(accountIds []string, keyPrefixBase64 string, blockId uint64) (*types.ContractStateChangesView, error)
-    TxStatusWithReceipts(txHash, sender string) (*types.TxView, error)
-    ReceiptbyId(receiptId string) (*types.ViewReceipt, error)
+	GenesisConfig() (raw *types.GenesisConfigView, err error)
+	ProtocolConfig() (raw *types.ProtocolConfigView, err error)
+	ProtocolConfigByBlockId(blockId uint64) (raw *types.ProtocolConfigView, err error)
+	ViewAccessKeyChanges(accountId, publicKey string) (*types.AccessKeyChangesView, error)
+	ViewAccessKeyChangesByBlockId(accountId, publicKey string, blockId uint64) (*types.AccessKeyChangesView, error)
+	ViewAllAccessKeyChanges(accountIds []string) (*types.AccessKeyChangesView, error)
+	ViewAllAccessKeyChangesByBlockId(accountIds []string, blockId uint64) (*types.AccessKeyChangesView, error)
+	ViewAccountByBlockId(accountId string, blockId uint64) (*types.AccountView, error)
+	ViewAccountChanges(accountIds []string) (*types.AccountChangesView, error)
+	ViewAccountChangesByBlockId(accountIds []string, blockId uint64) (*types.AccountChangesView, error)
+	ChangesInBlock() (*types.BlockChangesView, error)
+	ChangesInBlockByHash(hash string) (*types.BlockChangesView, error)
+	ChangesInBlockById(id uint64) (*types.BlockChangesView, error)
+	ViewContractCodeChanges(accountIds []string) (raw *types.ContractCodeChangesView, err error)
+	ViewContractCodeChangesByBlockId(accountIds []string, blockId uint64) (raw *types.ContractCodeChangesView, err error)
+	ViewContractStateChanges(accountIds []string, keyPrefixBase64 string) (*types.ContractStateChangesView, error)
+	ViewContractStateChangesByBlockId(accountIds []string, keyPrefixBase64 string, blockId uint64) (*types.ContractStateChangesView, error)
+	TxStatusWithReceipts(txHash, sender string) (*types.TxView, error)
+	ReceiptbyId(receiptId string) (*types.ViewReceipt, error)
 }
 
 func New(url string) NearApiI {
@@ -64,16 +68,17 @@ func New(url string) NearApiI {
 	return rpc
 }
 
-func (a *NearApi) checkError(err error, response *jsonrpc.RPCResponse) error {
+func (a *NearApi) Call(method string, params ...interface{}) (*jsonrpc.RPCResponse, error) {
+	response, err := a.c.Call(method, params...)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if response.Error != nil {
-		return types.ConvertError(response.Error)
+		return nil, types.ConvertError(response.Error)
 	}
-	return nil
+	return response, nil
 }
 
 func (a *NearApi) GetUrl() string {
-    return a.url
+	return a.url
 }

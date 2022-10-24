@@ -1,11 +1,7 @@
 package client
 
 import (
-	"fmt"
 	"testing"
-
-	"github.com/near/borsh-go"
-	"github.com/nexeranet/gonear/client/types"
 )
 
 func initTestClient(t *testing.T) *Client {
@@ -48,27 +44,27 @@ func TestClient__GetBalance(t *testing.T) {
 	}
 }
 
-func TestBorsh(t *testing.T){
-    type Test struct {
-        Actions []types.Action `json:"actions"`
-    }
-    tst := Test{
-        Actions: []types.Action{
-            {
-                Enum: types.CreateAccountEnum,
-                CreateAccount: types.CreateAccount{},
-            },
-            {
-                Enum: types.DeleteAccountEnum,
-                DeleteAccount: types.DeleteAccount{
-                    BeneficiaryID: "ASDFASDF",
-                },
-            },
-        },
-    }
-	serialized_tx, err := borsh.Serialize(tst)
-    if err != nil {
-        t.Fatalf("Borsh err: %s", err)
-    }
-    fmt.Println("STRUCT", serialized_tx)
-}
+// func TestBorsh(t *testing.T){
+//     type Test struct {
+//         Actions []types.Action `json:"actions"`
+//     }
+//     tst := Test{
+//         Actions: []types.Action{
+//             {
+//                 Enum: types.CreateAccountEnum,
+//                 CreateAccount: types.CreateAccount{},
+//             },
+//             {
+//                 Enum: types.DeleteAccountEnum,
+//                 DeleteAccount: types.DeleteAccount{
+//                     BeneficiaryID: "ASDFASDF",
+//                 },
+//             },
+//         },
+//     }
+// 	serialized_tx, err := borsh.Serialize(tst)
+//     if err != nil {
+//         t.Fatalf("Borsh err: %s", err)
+//     }
+//     fmt.Println("STRUCT", serialized_tx)
+// }

@@ -39,7 +39,7 @@ func TestClient__SendCallFunctionTx(t *testing.T) {
 	}
 	args := Args{
 		ReceiverId: "token.arhius.testnet",
-		Amount:     types.NewNear(4).String(),
+		Amount:     types.NewNear(1).String(),
 		Memo:       nil,
 	}
 	bytes, err := json.Marshal(&args)
