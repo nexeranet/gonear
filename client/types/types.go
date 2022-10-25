@@ -1,3 +1,6 @@
+// Near client types
+//
+//
 package types
 
 import (

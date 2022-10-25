@@ -2,6 +2,8 @@ package client
 
 import (
 	"bytes"
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -58,4 +60,15 @@ func GenerateActionsTransactionHash(addrFrom, addrTo, key string, nonce uint64, 
 		Signature:   types.NewSignature(signatureData),
 	}
 	return signed_tx.Base64Encode()
+}
+
+func EncodeToBase64(v interface{}) (string, error) {
+    var buf bytes.Buffer
+    encoder := base64.NewEncoder(base64.StdEncoding, &buf)
+    err := json.NewEncoder(encoder).Encode(v)
+    if err != nil {
+        return "", err
+    }
+    encoder.Close()
+    return buf.String(), nil
 }

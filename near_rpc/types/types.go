@@ -1,3 +1,6 @@
+// Near rpc api response types
+//
+//
 package near_rpc_types
 
 import (

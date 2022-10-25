@@ -1,3 +1,6 @@
+// Json rpc client 2.0 (http)
+//
+//
 package jsonrpc
 
 //go:generate mockgen -source jsonrpc.go -destination mocks/jsonrpc.go.go

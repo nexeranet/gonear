@@ -8,6 +8,7 @@
 # gonear
 
 A NEAR client written in Go
+
 ```go
 package main
 
@@ -32,7 +33,7 @@ func main() {
 	// address to
 	addrTo := "reciver.near"
 	// amount of near (*big.Int yoctoNear)
-    // one near = 1 * 10^23
+    // 1 near = 1 * 10^23
 	amount := types.NewNear(1).BigInt()
 	tx, err := client.TransferTx(amount, key, pubKey, addrFrom, addrTo)
 	if err != nil {
