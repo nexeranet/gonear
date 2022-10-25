@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func initTesnetApi() NearApiI {
+func initTesnetApi() INearRpc {
 	Url := "https://rpc.testnet.near.org"
 	return New(Url)
 }

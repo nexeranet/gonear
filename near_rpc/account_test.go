@@ -60,25 +60,25 @@ func TestViewAccountByBlockId(t *testing.T) {
 			name:      "Valid accound id",
 			accountId: "nexeranet.testnet",
 			blockId:   102109027,
-			errType: &types.ErrorGarbageCollectedBlock{},
+			errType:   &types.ErrorGarbageCollectedBlock{},
 		},
 		{
 			name:      "Contract accound id",
 			accountId: "vfinal.token.sweat.testnet",
 			blockId:   102109027,
-			errType: &types.ErrorGarbageCollectedBlock{},
+			errType:   &types.ErrorGarbageCollectedBlock{},
 		},
 		{
 			name:      "invalid account id",
 			accountId: "___",
 			blockId:   102109027,
-			errType: &types.ErrorParseError{},
+			errType:   &types.ErrorParseError{},
 		},
 		{
 			name:      "invalid block id",
 			accountId: "nexeranet.testnet",
 			blockId:   0,
-			errType: &types.ErrorUnknownBlock{},
+			errType:   &types.ErrorUnknownBlock{},
 		},
 	}
 	for _, tt := range tests {
@@ -89,7 +89,7 @@ func TestViewAccountByBlockId(t *testing.T) {
 				have := reflect.TypeOf(err)
 				if have != expect {
 					t.Fatalf("Unexpected error %s, have type: %s, expect type %#v",
-                        err,
+						err,
 						have.String(),
 						expect,
 					)
@@ -114,7 +114,7 @@ func TestViewAccountChanges(t *testing.T) {
 	tests := []Test{
 		{
 			name:     "Valid accound id",
-			accounts: []string{"nexeranet.testnet"},
+			accounts: []string{"nexeranet.testnet", "vfinal.token.sweat.testnet"},
 		},
 		{
 			name:     "Contract accound id",
@@ -146,8 +146,8 @@ func TestViewAccountChangesByBlockId(t *testing.T) {
 	type Test struct {
 		name     string
 		accounts []string
-        blockId uint64
-        errType error
+		blockId  uint64
+		errType  error
 	}
 
 	client := initTesnetApi()
@@ -155,25 +155,25 @@ func TestViewAccountChangesByBlockId(t *testing.T) {
 		{
 			name:     "Valid accound id",
 			accounts: []string{"nexeranet.testnet"},
-			blockId:   102109027,
-			errType: &types.ErrorUnknownBlock{},
+			blockId:  102109027,
+			errType:  &types.ErrorUnknownBlock{},
 		},
 		{
 			name:     "Contract accound id",
 			accounts: []string{"vfinal.token.sweat.testnet"},
-			blockId:   102109027,
-			errType: &types.ErrorUnknownBlock{},
+			blockId:  102109027,
+			errType:  &types.ErrorUnknownBlock{},
 		},
 		{
 			name:     "invalid block id",
 			accounts: []string{"nexeranet.testnet"},
-			blockId:   0,
-			errType: &types.ErrorUnknownBlock{},
+			blockId:  0,
+			errType:  &types.ErrorUnknownBlock{},
 		},
 		{
 			name:     "invalid account id",
 			accounts: []string{"___"},
-            errType: &types.ErrorParseError{},
+			errType:  &types.ErrorParseError{},
 		},
 	}
 	for _, tt := range tests {
@@ -184,7 +184,7 @@ func TestViewAccountChangesByBlockId(t *testing.T) {
 				have := reflect.TypeOf(err)
 				if have != expect {
 					t.Fatalf("Unexpected error %s, have type: %s, expect type %#v",
-                        err,
+						err,
 						have.String(),
 						expect,
 					)
@@ -197,4 +197,3 @@ func TestViewAccountChangesByBlockId(t *testing.T) {
 		})
 	}
 }
-

@@ -6,8 +6,8 @@ import (
 	types "github.com/nexeranet/gonear/near_rpc/types"
 )
 
-// View access key for final block blockchain
-func (a *NearApi) ViewAccessKey(account, publicKey string) (*types.AccessKeysView, error) {
+// Returns information about a single access key for given account.
+func (a *NearRpc) ViewAccessKey(account, publicKey string) (*types.AccessKeysView, error) {
 	type Params struct {
 		RequestType string `json:"request_type"`
 		Finality    string `json:"finality"`
@@ -30,8 +30,8 @@ func (a *NearApi) ViewAccessKey(account, publicKey string) (*types.AccessKeysVie
 	return &raw, nil
 }
 
-// View access key with specific block id (uint64) block blockchain
-func (a *NearApi) ViewAccessKeyByBlockId(account, publicKey string, blockId uint64) (*types.AccessKeysView, error) {
+// Returns information about a single access key for given account and block id
+func (a *NearRpc) ViewAccessKeyByBlockId(account, publicKey string, blockId uint64) (*types.AccessKeysView, error) {
 	type Params struct {
 		RequestType string `json:"request_type"`
 		AccountID   string `json:"account_id"`
@@ -54,8 +54,8 @@ func (a *NearApi) ViewAccessKeyByBlockId(account, publicKey string, blockId uint
 	return &raw, nil
 }
 
-// View access key with specific block id (uint64) block blockchain
-func (a *NearApi) ViewAccessKeyList(account string) (*types.AccessKeysListViev, error) {
+// Access keys for a given account.
+func (a *NearRpc) ViewAccessKeyList(account string) (*types.AccessKeysListViev, error) {
 	type Params struct {
 		RequestType string `json:"request_type"`
 		Finality    string `json:"finality"`
@@ -70,7 +70,8 @@ func (a *NearApi) ViewAccessKeyList(account string) (*types.AccessKeysListViev, 
 	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ViewAccessKeyChanges(accountId, publicKey string) (*types.AccessKeyChangesView, error) {
+//Returns individual access key changes in a last block.
+func (a *NearRpc) ViewAccessKeyChanges(accountId, publicKey string) (*types.AccessKeyChangesView, error) {
 	type Keys struct {
 		AccountID string `json:"account_id"`
 		PublicKey string `json:"public_key"`
@@ -98,7 +99,8 @@ func (a *NearApi) ViewAccessKeyChanges(accountId, publicKey string) (*types.Acce
 	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ViewAccessKeyChangesByBlockId(accountId, publicKey string, blockId uint64) (*types.AccessKeyChangesView, error) {
+//Returns individual access key changes in a specific block.
+func (a *NearRpc) ViewAccessKeyChangesByBlockId(accountId, publicKey string, blockId uint64) (*types.AccessKeyChangesView, error) {
 	type Keys struct {
 		AccountID string `json:"account_id"`
 		PublicKey string `json:"public_key"`
@@ -126,7 +128,9 @@ func (a *NearApi) ViewAccessKeyChangesByBlockId(accountId, publicKey string, blo
 	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ViewAllAccessKeyChanges(accountIds []string) (*types.AccessKeyChangesView, error) {
+
+// Returns changes to all access keys of a last block.
+func (a *NearRpc) ViewAllAccessKeyChanges(accountIds []string) (*types.AccessKeyChangesView, error) {
 	type Params struct {
 		ChangesType string   `json:"changes_type"`
 		AccountIds  []string `json:"account_ids"`
@@ -145,7 +149,8 @@ func (a *NearApi) ViewAllAccessKeyChanges(accountIds []string) (*types.AccessKey
 	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ViewAllAccessKeyChangesByBlockId(accountIds []string, blockId uint64) (*types.AccessKeyChangesView, error) {
+// Returns changes to all access keys of a specific block.
+func (a *NearRpc) ViewAllAccessKeyChangesByBlockId(accountIds []string, blockId uint64) (*types.AccessKeyChangesView, error) {
 	type Params struct {
 		ChangesType string   `json:"changes_type"`
 		AccountIds  []string `json:"account_ids"`

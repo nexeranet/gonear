@@ -9,12 +9,12 @@ import (
 	types "github.com/nexeranet/gonear/near_rpc/types"
 )
 
-type NearApi struct {
+type NearRpc struct {
 	c   jsonrpc.RPCClient
 	url string
 }
 
-type NearApiI interface {
+type INearRpc interface {
 	Call(method string, params ...interface{}) (*jsonrpc.RPCResponse, error)
 	ViewAccessKey(account, publicKey string) (*types.AccessKeysView, error)
 	ViewAccessKeyByBlockId(account, publicKey string, blockId uint64) (*types.AccessKeysView, error)
@@ -58,17 +58,19 @@ type NearApiI interface {
 	ViewContractStateChangesByBlockId(accountIds []string, keyPrefixBase64 string, blockId uint64) (*types.ContractStateChangesView, error)
 	TxStatusWithReceipts(txHash, sender string) (*types.TxView, error)
 	ReceiptbyId(receiptId string) (*types.ViewReceipt, error)
+    ViewContractStateByBlockId(accountId, prefixBase64 string, blockId uint64) (*types.ContractStateView, error)
+    ViewContractCodeByBlockId(accountId string, blockId uint64) (*types.ContractCodeView, error)
 }
 
-func New(url string) NearApiI {
-	rpc := &NearApi{
+func New(url string) INearRpc {
+	rpc := &NearRpc{
 		url: url,
 	}
 	rpc.c = jsonrpc.NewClient(rpc.url)
 	return rpc
 }
 
-func (a *NearApi) Call(method string, params ...interface{}) (*jsonrpc.RPCResponse, error) {
+func (a *NearRpc) Call(method string, params ...interface{}) (*jsonrpc.RPCResponse, error) {
 	response, err := a.c.Call(method, params...)
 	if err != nil {
 		return nil, err
@@ -79,6 +81,6 @@ func (a *NearApi) Call(method string, params ...interface{}) (*jsonrpc.RPCRespon
 	return response, nil
 }
 
-func (a *NearApi) GetUrl() string {
+func (a *NearRpc) GetUrl() string {
 	return a.url
 }

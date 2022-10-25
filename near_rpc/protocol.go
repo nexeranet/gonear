@@ -4,7 +4,8 @@ import (
 	types "github.com/nexeranet/gonear/near_rpc/types"
 )
 
-func (a *NearApi) GenesisConfig() (*types.GenesisConfigView, error) {
+//Returns current genesis configuration.
+func (a *NearRpc) GenesisConfig() (*types.GenesisConfigView, error) {
 	response, err := a.Call("EXPERIMENTAL_genesis_config")
 	if err != nil {
 		return nil, err
@@ -13,7 +14,9 @@ func (a *NearApi) GenesisConfig() (*types.GenesisConfigView, error) {
 	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ProtocolConfig() (*types.ProtocolConfigView, error) {
+//Returns most recent protocol configuration last block.
+//Useful for finding current storage and transaction costs.
+func (a *NearRpc) ProtocolConfig() (*types.ProtocolConfigView, error) {
 	type Params struct {
 		Finality string `json:"finality"`
 	}
@@ -26,7 +29,9 @@ func (a *NearApi) ProtocolConfig() (*types.ProtocolConfigView, error) {
 	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ProtocolConfigByBlockId(blockId uint64) (*types.ProtocolConfigView, error) {
+//Returns most recent protocol configuration of a specific queried block.
+//Useful for finding current storage and transaction costs.
+func (a *NearRpc) ProtocolConfigByBlockId(blockId uint64) (*types.ProtocolConfigView, error) {
 	type Params struct {
 		BlockId uint64 `json:"block_id"`
 	}

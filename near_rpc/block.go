@@ -4,7 +4,8 @@ import (
 	types "github.com/nexeranet/gonear/near_rpc/types"
 )
 
-func (a *NearApi) Block() (*types.BlockView, error) {
+// Queries network and returns latest block details
+func (a *NearRpc) Block() (*types.BlockView, error) {
 	type Params struct {
 		Finality string `json:"finality"`
 	}
@@ -17,7 +18,8 @@ func (a *NearApi) Block() (*types.BlockView, error) {
 	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) BlockByNumber(number uint64) (*types.BlockView, error) {
+// Queries network and returns block for given height.
+func (a *NearRpc) BlockByNumber(number uint64) (*types.BlockView, error) {
 	type Params struct {
 		BlockId uint64 `json:"block_id"`
 	}
@@ -30,7 +32,8 @@ func (a *NearApi) BlockByNumber(number uint64) (*types.BlockView, error) {
 	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) BlockByHash(hash string) (*types.BlockView, error) {
+// Queries network and returns block for given hash.
+func (a *NearRpc) BlockByHash(hash string) (*types.BlockView, error) {
 	type Params struct {
 		BlockId string `json:"block_id"`
 	}
@@ -43,7 +46,8 @@ func (a *NearApi) BlockByHash(hash string) (*types.BlockView, error) {
 	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ChangesInBlock() (*types.BlockChangesView, error) {
+// Returns changes in block for given latest block details.
+func (a *NearRpc) ChangesInBlock() (*types.BlockChangesView, error) {
 	type Params struct {
 		Finality string `json:"finality"`
 	}
@@ -56,7 +60,8 @@ func (a *NearApi) ChangesInBlock() (*types.BlockChangesView, error) {
 	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ChangesInBlockByHash(hash string) (*types.BlockChangesView, error) {
+// Returns changes in block for given block hash.
+func (a *NearRpc) ChangesInBlockByHash(hash string) (*types.BlockChangesView, error) {
 	type Params struct {
 		BlockId string `json:"block_id"`
 	}
@@ -69,7 +74,8 @@ func (a *NearApi) ChangesInBlockByHash(hash string) (*types.BlockChangesView, er
 	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ChangesInBlockById(id uint64) (*types.BlockChangesView, error) {
+// Returns changes in block for given block height.
+func (a *NearRpc) ChangesInBlockById(id uint64) (*types.BlockChangesView, error) {
 	type Params struct {
 		BlockId uint64 `json:"block_id"`
 	}

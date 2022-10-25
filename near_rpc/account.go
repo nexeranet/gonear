@@ -4,7 +4,8 @@ import (
 	types "github.com/nexeranet/gonear/near_rpc/types"
 )
 
-func (a *NearApi) ViewAccount(accountId string) (*types.AccountView, error) {
+// Returns basic account information.
+func (a *NearRpc) ViewAccount(accountId string) (*types.AccountView, error) {
 	type Params struct {
 		RequestType string `json:"request_type"`
 		Finality    string `json:"finality"`
@@ -19,7 +20,8 @@ func (a *NearApi) ViewAccount(accountId string) (*types.AccountView, error) {
 	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ViewAccountByBlockId(accountId string, blockId uint64) (*types.AccountView, error) {
+// Returns basic account information of a specific block.
+func (a *NearRpc) ViewAccountByBlockId(accountId string, blockId uint64) (*types.AccountView, error) {
 	type Params struct {
 		RequestType string `json:"request_type"`
 		BlockId     uint64 `json:"block_id"`
@@ -34,7 +36,8 @@ func (a *NearApi) ViewAccountByBlockId(accountId string, blockId uint64) (*types
 	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ViewAccountChanges(accountIds []string) (*types.AccountChangesView, error) {
+// Returns account changes from transactions in a given account.
+func (a *NearRpc) ViewAccountChanges(accountIds []string) (*types.AccountChangesView, error) {
 	type Params struct {
 		ChangesType string   `json:"changes_type"`
 		Finality    string   `json:"finality"`
@@ -49,7 +52,8 @@ func (a *NearApi) ViewAccountChanges(accountIds []string) (*types.AccountChanges
 	return &raw, response.GetObject(&raw)
 }
 
-func (a *NearApi) ViewAccountChangesByBlockId(accountIds []string, blockId uint64) (*types.AccountChangesView, error) {
+// Returns account changes from transactions in a given account of a specific block.
+func (a *NearRpc) ViewAccountChangesByBlockId(accountIds []string, blockId uint64) (*types.AccountChangesView, error) {
 	type Params struct {
 		ChangesType string   `json:"changes_type"`
 		AccountIds  []string `json:"account_ids"`

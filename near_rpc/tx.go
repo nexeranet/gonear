@@ -4,7 +4,9 @@ import (
 	types "github.com/nexeranet/gonear/near_rpc/types"
 )
 
-func (a *NearApi) CheckTx(hash, sender string) (*types.TxView, error) {
+// Queries status of a transaction by hash with sender account and returns the
+// final transaction result.
+func (a *NearRpc) CheckTx(hash, sender string) (*types.TxView, error) {
 	response, err := a.Call("tx", [2]string{hash, sender})
 	if err != nil {
 		return nil, err
@@ -17,7 +19,8 @@ func (a *NearApi) CheckTx(hash, sender string) (*types.TxView, error) {
 	return &raw, raw.Status.CheckError()
 }
 
-func (a *NearApi) SendAsyncTx(signedTx string) (string, error) {
+// Sends a transaction and immediately returns transaction hash.
+func (a *NearRpc) SendAsyncTx(signedTx string) (string, error) {
 	response, err := a.Call("broadcast_tx_async", [1]string{signedTx})
 	if err != nil {
 		return "", err
@@ -25,7 +28,8 @@ func (a *NearApi) SendAsyncTx(signedTx string) (string, error) {
 	return response.GetString()
 }
 
-func (a *NearApi) SendAwaitTx(signedTx string) (*types.TxView, error) {
+// Sends a transaction and waits until transaction is fully complete.
+func (a *NearRpc) SendAwaitTx(signedTx string) (*types.TxView, error) {
 	response, err := a.Call("broadcast_tx_commit", [1]string{signedTx})
 	if err != nil {
 		return nil, err
@@ -38,7 +42,9 @@ func (a *NearApi) SendAwaitTx(signedTx string) (*types.TxView, error) {
 	return &raw, raw.Status.CheckError()
 }
 
-func (a *NearApi) TxStatusWithReceipts(txHash, sender string) (*types.TxView, error) {
+// Queries status of a transaction by hash, returning the final transaction result
+// and details of all receipts.
+func (a *NearRpc) TxStatusWithReceipts(txHash, sender string) (*types.TxView, error) {
 	response, err := a.Call("EXPERIMENTAL_tx_status", [2]string{txHash, sender})
 	if err != nil {
 		return nil, err
@@ -51,7 +57,8 @@ func (a *NearApi) TxStatusWithReceipts(txHash, sender string) (*types.TxView, er
 	return &raw, raw.Status.CheckError()
 }
 
-func (a *NearApi) ReceiptbyId(receiptId string) (*types.ViewReceipt, error) {
+// Fetches a receipt by it's ID (as is, without a status or execution outcome)
+func (a *NearRpc) ReceiptbyId(receiptId string) (*types.ViewReceipt, error) {
 	type Params struct {
 		ReceiptId string `json:"receipt_id"`
 	}
