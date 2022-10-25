@@ -62,12 +62,16 @@ type INearRpc interface {
     ViewContractCodeByBlockId(accountId string, blockId uint64) (*types.ContractCodeView, error)
 }
 
-func New(url string) INearRpc {
+func New(url string) *NearRpc {
 	rpc := &NearRpc{
 		url: url,
 	}
 	rpc.c = jsonrpc.NewClient(rpc.url)
 	return rpc
+}
+
+func NewInterface(url string) INearRpc{
+    return New(url)
 }
 
 func (a *NearRpc) Call(method string, params ...interface{}) (*jsonrpc.RPCResponse, error) {

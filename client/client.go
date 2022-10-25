@@ -10,7 +10,7 @@ import (
 )
 
 type IClient interface {
-	Rpc() near_rpc.NearApiI
+	Rpc() near_rpc.INearRpc
 	BalanceAt(string) (*big.Int, error)
 	CheckTx(hash, sender string) (*near_api_types.TxView, error)
 	TransferTx(amount *big.Int, key, publicKey, addrFrom, addrTo string) (*near_api_types.TxView, error)
@@ -21,17 +21,18 @@ type IClient interface {
 }
 
 type Client struct {
-	C near_rpc.NearApiI
+	C near_rpc.INearRpc
 }
 
 func NewClient(url string) *Client {
-	return &Client{near_rpc.New(url)}
+	return &Client{near_rpc.NewInterface(url)}
 }
+
 func NewIClient(url string) IClient {
 	return NewClient(url)
 }
 
-func (a *Client) Rpc() near_rpc.NearApiI {
+func (a *Client) Rpc() near_rpc.INearRpc {
 	return a.C
 }
 
