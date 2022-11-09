@@ -1,6 +1,10 @@
 package near_rpc_types
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"strings"
+)
 
 type StatusTx struct {
 	SuccessValue *string   `json:"SuccessValue,omitempty"`
@@ -106,6 +110,30 @@ type ReceiptOutcome struct {
 			SuccessValue string `json:"SuccessValue"`
 		} `json:"status"`
 	} `json:"outcome"`
+}
+
+type EventLog struct {
+		Standard string      `json:"standard"`
+		Version  string      `json:"version"`
+		Event    string      `json:"event"`
+		Data     interface{} `json:"data"`
+}
+
+func (r ReceiptOutcome) GetLogs() (list []EventLog, err error){
+    for _, log := range r.Outcome.Logs {
+        strlog, ok := log.(string)
+        if !ok {
+            continue
+        }
+        var event_log EventLog
+	    str := strings.Replace(strlog, "EVENT_JSON:", "", -1)
+        err = json.Unmarshal([]byte(str), &event_log)
+        if err != nil {
+            return list, err
+        }
+        list = append(list, event_log)
+    }
+    return list, err
 }
 
 type TxView struct {

@@ -141,7 +141,7 @@ func TestTxStatusWithReceipts(t *testing.T) {
 		name    string
 		txHash  string
 		sender  string
-        errType error
+		errType error
 	}
 	api := initTesnetApi()
 	tests := []Test{
@@ -190,19 +190,19 @@ func TestReceiptbyId(t *testing.T) {
 	type Test struct {
 		name      string
 		receiptId string
-        errType error
+		errType   error
 	}
 	api := initTesnetApi()
 	tests := []Test{
 		{
 			name:      "Base case",
 			receiptId: "Hfe4QVnXxJLMpmjKAss8SnMhHgV55ZDAfFcEavXXcqD4",
-			errType: &types.ErrorUnknownReceipt{},
+			errType:   &types.ErrorUnknownReceipt{},
 		},
 		{
 			name:      "invalid receipt id",
 			receiptId: "asdfsa$$$$$$$",
-			errType: &types.ErrorParseError{},
+			errType:   &types.ErrorParseError{},
 		},
 	}
 	for _, tt := range tests {
@@ -226,3 +226,17 @@ func TestReceiptbyId(t *testing.T) {
 		})
 	}
 }
+
+// func TestGetLogs(t *testing.T) {
+// 	api := initTesnetApi()
+// 	result, err := api.CheckTx("DRMZCyj1F5kjCjrdnTQRGmSswac6RZetQ6r2LGs1c4dg", "sbv2-authority.testnet")
+// 	if err != nil {
+// 		t.Fatalf("%v", err)
+// 	}
+// 	log := result.ReceiptsOutcome[0]
+//     event_log, err := log.GetLogs()
+//     if err != nil {
+//         t.Fatalf("%v", err)
+//     }
+// 	fmt.Println(event_log)
+// }
