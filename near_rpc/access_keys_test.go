@@ -100,7 +100,7 @@ func TestViewAccessKeyByBlockId(t *testing.T) {
 				have := reflect.TypeOf(err)
 				if expect != have {
 					t.Fatalf("Unexpected error %#v, have type: %s, expect type %#v",
-                        err,
+						err,
 						have.String(),
 						expect,
 					)
@@ -247,7 +247,7 @@ func TestViewAccessKeyChangesByBlockId(t *testing.T) {
 				have := reflect.TypeOf(err)
 				if have != expect {
 					t.Fatalf("Unexpected error %#v, have type: %s, expect type %#v",
-                        err,
+						err,
 						have.String(),
 						expect,
 					)
@@ -308,19 +308,19 @@ func TestViewAllAccessKeyChangesByBlockId(t *testing.T) {
 			name:     "Simple test",
 			accounts: []string{"nexeranet.testnet"},
 			blockId:  102109027,
-            errType: &types.ErrorUnknownBlock{},
+			errType:  &types.ErrorUnknownBlock{},
 		},
 		{
 			name:     "Invalid account id",
 			accounts: []string{"asdfasdf$$$$$"},
 			blockId:  102109027,
-            errType: &types.ErrorParseError{},
+			errType:  &types.ErrorParseError{},
 		},
 		{
 			name:     "Invalid block id",
 			accounts: []string{"nexeranet.testnet"},
 			blockId:  0,
-            errType: &types.ErrorUnknownBlock{},
+			errType:  &types.ErrorUnknownBlock{},
 		},
 	}
 	for _, tt := range tests {
@@ -331,7 +331,7 @@ func TestViewAllAccessKeyChangesByBlockId(t *testing.T) {
 				have := reflect.TypeOf(err)
 				if have != expect {
 					t.Fatalf("Unexpected error %s, have type: %s, expect type %#v",
-                        err,
+						err,
 						have.String(),
 						expect,
 					)
