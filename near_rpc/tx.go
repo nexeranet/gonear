@@ -12,11 +12,7 @@ func (a *NearRpc) CheckTx(hash, sender string) (*types.TxView, error) {
 		return nil, err
 	}
 	var raw types.TxView
-	err = response.GetObject(&raw)
-	if err != nil {
-		return nil, err
-	}
-	return &raw, raw.Status.CheckError()
+	return &raw, response.GetObject(&raw)
 }
 
 // Sends a transaction and immediately returns transaction hash.
@@ -35,11 +31,7 @@ func (a *NearRpc) SendAwaitTx(signedTx string) (*types.TxView, error) {
 		return nil, err
 	}
 	var raw types.TxView
-	err = response.GetObject(&raw)
-	if err != nil {
-		return nil, err
-	}
-	return &raw, raw.Status.CheckError()
+	return &raw, response.GetObject(&raw)
 }
 
 // Queries status of a transaction by hash, returning the final transaction result
@@ -50,11 +42,7 @@ func (a *NearRpc) TxStatusWithReceipts(txHash, sender string) (*types.TxView, er
 		return nil, err
 	}
 	var raw types.TxView
-	err = response.GetObject(&raw)
-	if err != nil {
-		return nil, err
-	}
-	return &raw, raw.Status.CheckError()
+	return &raw, response.GetObject(&raw)
 }
 
 // Fetches a receipt by it's ID (as is, without a status or execution outcome)

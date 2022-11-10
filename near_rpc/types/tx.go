@@ -1,6 +1,7 @@
 package near_rpc_types
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -11,13 +12,18 @@ type StatusTx struct {
 	Failure      *FailerTx `json:"Failure,omitempty"`
 }
 
-func (s StatusTx) IsError() bool {
-	return s.Failure != nil
-}
-func (s StatusTx) CheckError() error {
-	if s.IsError() {
-		return s.Failure.Error()
+func (t StatusTx) Result(value interface{}) error {
+    if t.SuccessValue == nil {
+        return fmt.Errorf("Return success value is nil")
+    }
+	decoded64, err := base64.StdEncoding.DecodeString(*t.SuccessValue)
+	if err != nil {
+		return err
 	}
+	return json.Unmarshal(decoded64, value)
+}
+
+func (s StatusTx) CheckError() error {
 	if !s.IsSuccess() {
 		return fmt.Errorf("Unknown error")
 	}
@@ -26,9 +32,7 @@ func (s StatusTx) CheckError() error {
 
 func (s StatusTx) IsSuccess() bool {
 	if s.SuccessValue != nil {
-		if *s.SuccessValue == "" {
-			return true
-		}
+		return true
 	}
 	return false
 }
@@ -50,8 +54,8 @@ type AccountDoesNotExist struct {
 	AccountId string `json:"account_id"`
 }
 
-func (a AccountDoesNotExist) Error() error {
-	return fmt.Errorf("Account does not exist: %s", a.AccountId)
+func (a AccountDoesNotExist) Error() string {
+	return fmt.Sprintf("Account does not exist: %s", a.AccountId)
 }
 
 type ActionErrorKind struct {
@@ -60,7 +64,7 @@ type ActionErrorKind struct {
 
 func (a ActionErrorKind) ReturnError() error {
 	if a.AccountDoesNotExist != nil {
-		return a.AccountDoesNotExist.Error()
+		return a.AccountDoesNotExist
 	}
 	return fmt.Errorf("Unknown error")
 }
@@ -113,27 +117,27 @@ type ReceiptOutcome struct {
 }
 
 type EventLog struct {
-		Standard string      `json:"standard"`
-		Version  string      `json:"version"`
-		Event    string      `json:"event"`
-		Data     interface{} `json:"data"`
+	Standard string      `json:"standard"`
+	Version  string      `json:"version"`
+	Event    string      `json:"event"`
+	Data     interface{} `json:"data"`
 }
 
-func (r ReceiptOutcome) GetLogs() (list []EventLog, err error){
-    for _, log := range r.Outcome.Logs {
-        strlog, ok := log.(string)
-        if !ok {
-            continue
-        }
-        var event_log EventLog
-	    str := strings.Replace(strlog, "EVENT_JSON:", "", -1)
-        err = json.Unmarshal([]byte(str), &event_log)
-        if err != nil {
-            return list, err
-        }
-        list = append(list, event_log)
-    }
-    return list, err
+func (r ReceiptOutcome) GetLogs() (list []EventLog, err error) {
+	for _, log := range r.Outcome.Logs {
+		strlog, ok := log.(string)
+		if !ok {
+			continue
+		}
+		var event_log EventLog
+		str := strings.Replace(strlog, "EVENT_JSON:", "", -1)
+		err = json.Unmarshal([]byte(str), &event_log)
+		if err != nil {
+			return list, err
+		}
+		list = append(list, event_log)
+	}
+	return list, err
 }
 
 type TxView struct {

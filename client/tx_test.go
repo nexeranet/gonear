@@ -29,14 +29,10 @@ func TestClient__SendTransferTx(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			tx, err := client.TransferTx(tt.amount, key, pubKey, tt.addrFrom, tt.addrTo)
+			_, err := client.TransferTx(tt.amount, key, pubKey, tt.addrFrom, tt.addrTo)
 
 			if err != nil && !tt.isError {
 				t.Fatalf("expected not error, actual %s", err)
-			}
-
-			if tx.Status.IsError() && !tt.isError {
-				t.Fatalf("expected not error, actual %s", tx.Status.Failure.Error())
 			}
 
 			if err == nil && tt.isError {
