@@ -2,10 +2,18 @@ package client
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"math/big"
 	"testing"
+
+	"github.com/nexeranet/gonear/client/types"
 )
+
+func prettyPrint(i interface{}) string {
+	s, _ := json.MarshalIndent(i, "", " ")
+	return string(s)
+}
 
 func TestClient__SendCallFunctionTx(t *testing.T) {
 	type Test struct {
@@ -32,7 +40,7 @@ func TestClient__SendCallFunctionTx(t *testing.T) {
 	}
 	args := Args{
 		ReceiverId: "token.arhius.testnet",
-		Amount:     NewYottoNear(big.NewInt(4)).String(),
+		Amount:     types.NewNear(1).String(),
 		Memo:       nil,
 	}
 	bytes, err := json.Marshal(&args)
@@ -44,19 +52,44 @@ func TestClient__SendCallFunctionTx(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 
-			tx, err := client.SendCallFunctionTx("ft_transfer", bytes, big.NewInt(1), tt.gas, key, pubKey, tt.addrFrom, tt.addrTo)
-
+			_, err := client.FunctionCallTx("ft_transfer", bytes, big.NewInt(1), tt.gas, key, pubKey, tt.addrFrom, tt.addrTo)
 			if err != nil && !tt.isError {
 				t.Fatalf("expected not error, actual %s", err)
 			}
-
-			if tx.Status.IsError() && !tt.isError {
-				t.Fatalf("expected not error, actual %s", tx.Status.Failure.Error())
-			}
-
 			if err == nil && tt.isError {
 				t.Fatalf("Expect error, have nil")
 			}
 		})
 	}
+}
+
+func TestClient__CallContract(t *testing.T) {
+	type Args struct {
+		ProjectId string `json:"project_id"`
+	}
+	var gas uint64 = 300000000000000
+	key := "ed25519:5XKLL4yQoBVyHCUyXrMt9898VG7My2iWomu1GC3wAW4V6eBwZGmreqpMiWfC1HiVpmAAWCe1pJ6RKNuEFgupbPjK"
+	pubKey := "ed25519:7phkB1HWhWETQ1WkErTUS58s1EjMr4F8JFYg9VTQDk3X"
+	addrFrom := "nexeranet.testnet"
+	addrTo := "deploy.ofp_collateral.testnet"
+	args := Args{
+		ProjectId: "1666081062930",
+	}
+	bytes, err := json.Marshal(&args)
+	if err != nil {
+		t.Fatalf("JSON Marshal: %s", err.Error())
+	}
+	deposit := types.NewNear(2).BigInt()
+	deposit = deposit.Div(deposit, big.NewInt(10))
+	client := initTestClient(t)
+	tx, err := client.FunctionCallTx("stake_funds", bytes, deposit, gas, key, pubKey, addrFrom, addrTo)
+	if err != nil {
+		t.Fatalf("RPC Error: %s", err.Error())
+	}
+	var result bool
+	err = tx.Status.Result(&result)
+	if err != nil {
+		t.Fatalf("Result Error: %s", err.Error())
+	}
+	fmt.Println(result)
 }

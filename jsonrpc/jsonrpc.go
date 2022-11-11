@@ -1,4 +1,9 @@
+// Json rpc client 2.0 (http)
+//
+//
 package jsonrpc
+
+//go:generate mockgen -source jsonrpc.go -destination mocks/jsonrpc.go.go
 
 import (
 	"bytes"
@@ -7,7 +12,6 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
-	"strconv"
 )
 
 const (
@@ -47,11 +51,11 @@ type RPCResponse struct {
 }
 
 type RPCErrorInfo struct {
-	ErrorMessage string `json:"error_message"`
+	ErrorMessage string `json:"error_message,omitempty"`
 }
 type RPCErrorCause struct {
-	Name string       `json:"name"`
-	Info RPCErrorInfo `json:"info"`
+	Name string                 `json:"name"`
+	Info map[string]interface{} `json:"info"`
 }
 type RPCError struct {
 	Code    int           `json:"code"`
@@ -62,7 +66,7 @@ type RPCError struct {
 }
 
 func (e *RPCError) Error() string {
-	return strconv.Itoa(e.Code) + ":" + e.Message
+	return fmt.Sprintf("%d:%s[%v]", e.Code, e.Message, e.Data)
 }
 
 type HTTPError struct {

@@ -1,4 +1,7 @@
-package types
+// Near rpc api response types
+//
+//
+package near_rpc_types
 
 import (
 	"encoding/json"
@@ -6,11 +9,9 @@ import (
 	"reflect"
 )
 
-type AccessKeys struct {
-	Permission Permission `json:"permission"`
-	BlockHash  string     `json:"block_hash"`
-	Nonce      uint64     `json:"nonce"`
-	Error      string     `json:"error"`
+type Permission struct {
+	String       string                  `json:"permission"`
+	FunctionCall *FunctionCallPermission `json:"FunctionCall"`
 }
 
 type FunctionCallPermission struct {
@@ -19,9 +20,8 @@ type FunctionCallPermission struct {
 	ReceiverId  string   `json:"receiver_id"`
 }
 
-type Permission struct {
-	String       string                  `json:"permission"`
-	FunctionCall *FunctionCallPermission `json:"FunctionCall"`
+func (p *Permission) IsFullAccess() bool {
+    return p.String == "FullAccess"
 }
 
 func (p *Permission) UnmarshalJSON(data []byte) error {
@@ -60,6 +60,8 @@ func (p *Permission) UnmarshalJSON(data []byte) error {
 				p.FunctionCall.ReceiverId = receiver_id.(string)
 			}
 		}
+	default:
+		return fmt.Errorf("Unknown json type, can't unmarshal JSON")
 	}
 	return nil
 }
