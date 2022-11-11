@@ -2,6 +2,7 @@ package client
 
 import (
 	"math/big"
+	"os"
 	"testing"
 
 	"github.com/nexeranet/gonear/client/types"
@@ -15,12 +16,13 @@ func TestClient__SendTransferTx(t *testing.T) {
 		amount   *big.Int
 		isError  bool
 	}
-	key := "ed25519:5XKLL4yQoBVyHCUyXrMt9898VG7My2iWomu1GC3wAW4V6eBwZGmreqpMiWfC1HiVpmAAWCe1pJ6RKNuEFgupbPjK"
-	pubKey := "ed25519:7phkB1HWhWETQ1WkErTUS58s1EjMr4F8JFYg9VTQDk3X"
+	key := os.Getenv("PRIVATE")
+	pubKey := os.Getenv("PUBLIC")
+	acc := os.Getenv("ACCOUNT")
 	tests := []Test{
 		{
 			name:     "Simple data",
-			addrFrom: "nexeranet.testnet",
+			addrFrom: acc,
 			addrTo:   "token.arhius.testnet",
 			amount:   types.NewNear(1).BigInt(),
 		},
