@@ -13,8 +13,8 @@ type StatusTx struct {
 }
 
 func (t StatusTx) Result(value interface{}) error {
-    if t.SuccessValue == nil {
-        return fmt.Errorf("Return success value is nil")
+    if !t.IsSuccess() {
+        return fmt.Errorf("Success value is nil")
     }
 	decoded64, err := base64.StdEncoding.DecodeString(*t.SuccessValue)
 	if err != nil {
@@ -23,12 +23,12 @@ func (t StatusTx) Result(value interface{}) error {
 	return json.Unmarshal(decoded64, value)
 }
 
-func (s StatusTx) CheckError() error {
-	if !s.IsSuccess() {
-		return fmt.Errorf("Unknown error")
-	}
-	return nil
-}
+// func (s StatusTx) CheckError() error {
+// 	if !s.IsSuccess() {
+// 		return fmt.Errorf("Unknown error")
+// 	}
+// 	return nil
+// }
 
 func (s StatusTx) IsSuccess() bool {
 	if s.SuccessValue != nil {
