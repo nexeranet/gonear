@@ -29,11 +29,11 @@ func ExampleClient_TransferTx() {
 	near := client.NewClient(url)
 
 	// private key
-	key := "ed25519:5XKLL4yQoBVyHCUyXrMt9898VG7My2iWomu1GC3wAW4V6eBwZGmreqpMiWfC1HiVpmAAWCe1pJ6RKNuEFgupbPjK"
+	key := "ed25519:111111"
 	// public key
-	pubKey := "ed25519:7phkB1HWhWETQ1WkErTUS58s1EjMr4F8JFYg9VTQDk3X"
+	pubKey := "ed25519:22222"
 	// address from
-	addrFrom := "nexeranet.testnet"
+	addrFrom := "account.mainnet"
 	// address to
 	addrTo := "token.arhius.testnet"
 	// amount of near (*big.Int yoctoNear)
@@ -78,11 +78,11 @@ func ExampleClient_ActionsTx() {
 	near := client.NewClient(url)
 
 	// private key
-	key := "ed25519:5XKLL4yQoBVyHCUyXrMt9898VG7My2iWomu1GC3wAW4V6eBwZGmreqpMiWfC1HiVpmAAWCe1pJ6RKNuEFgupbPjK"
+	key := "ed25519:111111"
 	// public key
-	pubKey := "ed25519:7phkB1HWhWETQ1WkErTUS58s1EjMr4F8JFYg9VTQDk3X"
+	pubKey := "ed25519:222222"
 	// address from
-	addrFrom := "nexeranet.testnet"
+	addrFrom := "account.mainnet"
 	// address to
 	addrTo := "token.arhius.testnet"
 	// amount of near (*big.Int yoctoNear)
@@ -103,11 +103,11 @@ func ExampleClient_AsyncActionsTx() {
 	near := client.NewClient(url)
 
 	// private key
-	key := "ed25519:5XKLL4yQoBVyHCUyXrMt9898VG7My2iWomu1GC3wAW4V6eBwZGmreqpMiWfC1HiVpmAAWCe1pJ6RKNuEFgupbPjK"
+	key := "ed25519:111111"
 	// public key
-	pubKey := "ed25519:7phkB1HWhWETQ1WkErTUS58s1EjMr4F8JFYg9VTQDk3X"
+	pubKey := "ed25519:222222"
 	// address from
-	addrFrom := "nexeranet.testnet"
+	addrFrom := "account.mainnet"
 	// address to
 	addrTo := "token.arhius.testnet"
 	// amount of near (*big.Int yoctoNear)
@@ -128,9 +128,9 @@ func ExampleClient_FunctionCallTx() {
     // method name
     method := "get_method"
 	// private key
-	key := "ed25519:5XKLL4yQoBVyHCUyXrMt9898VG7My2iWomu1GC3wAW4V6eBwZGmreqpMiWfC1HiVpmAAWCe1pJ6RKNuEFgupbPjK"
+	key := "ed25519:111111"
 	// public key
-	pubKey := "ed25519:7phkB1HWhWETQ1WkErTUS58s1EjMr4F8JFYg9VTQDk3X"
+	pubKey := "ed25519:2222222"
 	// address from
 	addrFrom := "nexeranet.testnet"
 	// address to
