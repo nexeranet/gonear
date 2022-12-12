@@ -21,10 +21,10 @@ type ContractStateView struct {
 }
 
 type ContractFuncResult struct {
-	Result      interface{} `json:"result"`
-	BlockHeight uint64      `json:"block_height"`
-	BlockHash   string      `json:"block_hash"`
-	Error       string      `json:"error,omitempty"`
+	Result      []byte `json:"result"`
+	BlockHeight uint64 `json:"block_height"`
+	BlockHash   string `json:"block_hash"`
+	Error       string `json:"error,omitempty"`
 }
 
 type ContractStateChangesView struct {

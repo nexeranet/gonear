@@ -1,6 +1,7 @@
 package client
 
 import (
+	"fmt"
 	"math/big"
 	"os"
 	"testing"
@@ -42,4 +43,27 @@ func TestClient__SendTransferTx(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestFuncCall(t *testing.T) {
+	client := initTestClient(t)
+
+	type Params struct {
+		ProjectID string `json:"project_id"`
+		StageID   string `json:"stage_id"`
+	}
+	params := Params{fmt.Sprint(1670332900497), fmt.Sprint(4)}
+	args, err := EncodeBase64Args(params)
+	if err != nil {
+        t.Fatal(err)
+	}
+	response, err := client.CallContractFunc(
+		"test_v1_nft.openforest.testnet",
+		"get_stage",
+		args)
+	// check return value in response result
+	if err != nil {
+        t.Fatal(err)
+	}
+    t.Log(string(response.Result))
 }

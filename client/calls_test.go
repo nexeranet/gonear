@@ -32,13 +32,8 @@ func TestViewStage(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	bytes, ok := response.Result.([]byte)
-	if !ok {
-		t.Fatal(fmt.Errorf("Can't type assertion to []byte from %v", response.Result))
-	}
-
 	var resp projectStage
-	err = json.Unmarshal(bytes, &resp)
+	err = json.Unmarshal(response.Result, &resp)
 	if err != nil {
 		t.Fatal(err)
 	}
