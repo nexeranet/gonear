@@ -5,15 +5,11 @@ import (
 	"fmt"
 	"log"
 	"math/big"
+	"os"
 	"testing"
 
 	"github.com/nexeranet/gonear/client/types"
 )
-
-func prettyPrint(i interface{}) string {
-	s, _ := json.MarshalIndent(i, "", " ")
-	return string(s)
-}
 
 func TestClient__SendCallFunctionTx(t *testing.T) {
 	type Test struct {
@@ -28,12 +24,14 @@ func TestClient__SendCallFunctionTx(t *testing.T) {
 		Amount     string  `json:"amount"`
 		Memo       *string `json:"memo"`
 	}
-	key := "ed25519:5XKLL4yQoBVyHCUyXrMt9898VG7My2iWomu1GC3wAW4V6eBwZGmreqpMiWfC1HiVpmAAWCe1pJ6RKNuEFgupbPjK"
-	pubKey := "ed25519:7phkB1HWhWETQ1WkErTUS58s1EjMr4F8JFYg9VTQDk3X"
+
+	key := os.Getenv("PRIVATE")
+	pubKey := os.Getenv("PUBLIC")
+	acc := os.Getenv("ACCOUNT")
 	tests := []Test{
 		{
 			name:     "Simple data",
-			addrFrom: "nexeranet.testnet",
+			addrFrom: acc,
 			addrTo:   "token.arhius.testnet",
 			gas:      300000000000000,
 		},
@@ -68,9 +66,9 @@ func TestClient__CallContract(t *testing.T) {
 		ProjectId string `json:"project_id"`
 	}
 	var gas uint64 = 300000000000000
-	key := "ed25519:5XKLL4yQoBVyHCUyXrMt9898VG7My2iWomu1GC3wAW4V6eBwZGmreqpMiWfC1HiVpmAAWCe1pJ6RKNuEFgupbPjK"
-	pubKey := "ed25519:7phkB1HWhWETQ1WkErTUS58s1EjMr4F8JFYg9VTQDk3X"
-	addrFrom := "nexeranet.testnet"
+	key := os.Getenv("PRIVATE")
+	pubKey := os.Getenv("PUBLIC")
+	addrFrom := os.Getenv("ACCOUNT")
 	addrTo := "deploy.ofp_collateral.testnet"
 	args := Args{
 		ProjectId: "1666081062930",

@@ -227,16 +227,19 @@ func TestReceiptbyId(t *testing.T) {
 	}
 }
 
-// func TestGetLogs(t *testing.T) {
-// 	api := initTesnetApi()
-// 	result, err := api.CheckTx("DRMZCyj1F5kjCjrdnTQRGmSswac6RZetQ6r2LGs1c4dg", "sbv2-authority.testnet")
-// 	if err != nil {
-// 		t.Fatalf("%v", err)
-// 	}
-// 	log := result.ReceiptsOutcome[0]
-//     event_log, err := log.GetLogs()
-//     if err != nil {
-//         t.Fatalf("%v", err)
-//     }
-// 	fmt.Println(event_log)
-// }
+func TestGetLogs(t *testing.T) {
+	api := initTesnetApi()
+	result, err := api.CheckTx("Bw53dEcv4KWPKpkM9EJ3s5hHATQsJBH1atcA8ezJ2vXi", "sbv2-authority.testnet")
+	if err != nil {
+		t.Fatalf("%v", err)
+	}
+    if !result.Status.IsSuccess(){
+        t.Fatal(result.Status.GetError())
+    }
+	log := result.ReceiptsOutcome[0]
+    event_log, err := log.GetLogs()
+    if err != nil {
+        t.Fatalf("%v", err)
+    }
+	t.Log(event_log)
+}

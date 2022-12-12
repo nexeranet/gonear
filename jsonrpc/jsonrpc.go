@@ -1,12 +1,11 @@
 // Json rpc client 2.0 (http)
-//
-//
 package jsonrpc
 
 //go:generate mockgen -source jsonrpc.go -destination mocks/jsonrpc.go.go
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -20,6 +19,7 @@ const (
 
 type RPCClient interface {
 	Call(method string, params ...interface{}) (*RPCResponse, error)
+	CallContext(ctx context.Context, method string, params ...interface{}) (*RPCResponse, error)
 	CallRaw(request *RPCRequest) (*RPCResponse, error)
 	CallFor(out interface{}, method string, params ...interface{}) error
 	CallBatch(requests RPCRequests) (RPCResponses, error)
@@ -156,12 +156,23 @@ func (client *rpcClient) Call(method string, params ...interface{}) (*RPCRespons
 		JSONRPC: jsonrpcVersion,
 	}
 
-	return client.doCall(request)
+	return client.doCall(context.Background(), request)
+}
+
+func (client *rpcClient) CallContext(ctx context.Context, method string, params ...interface{}) (*RPCResponse, error) {
+
+	request := &RPCRequest{
+		Method:  method,
+		Params:  Params(params...),
+		JSONRPC: jsonrpcVersion,
+	}
+
+	return client.doCall(ctx, request)
 }
 
 func (client *rpcClient) CallRaw(request *RPCRequest) (*RPCResponse, error) {
 
-	return client.doCall(request)
+	return client.doCall(context.Background(), request)
 }
 
 func (client *rpcClient) CallFor(out interface{}, method string, params ...interface{}) error {
@@ -198,7 +209,7 @@ func (client *rpcClient) CallBatchRaw(requests RPCRequests) (RPCResponses, error
 	return client.doBatchCall(requests)
 }
 
-func (client *rpcClient) newRequest(req interface{}) (*http.Request, error) {
+func (client *rpcClient) newRequest(ctx context.Context, req interface{}) (*http.Request, error) {
 
 	body, err := json.Marshal(req)
 	if err != nil {
@@ -212,7 +223,7 @@ func (client *rpcClient) newRequest(req interface{}) (*http.Request, error) {
 
 	request.Header.Set("Content-Type", "application/json")
 	request.Header.Set("Accept", "application/json")
-
+	request = request.WithContext(ctx)
 	// set default headers first, so that even content type and accept can be overwritten
 	for k, v := range client.customHeaders {
 		request.Header.Set(k, v)
@@ -221,9 +232,9 @@ func (client *rpcClient) newRequest(req interface{}) (*http.Request, error) {
 	return request, nil
 }
 
-func (client *rpcClient) doCall(RPCRequest *RPCRequest) (*RPCResponse, error) {
+func (client *rpcClient) doCall(ctx context.Context, RPCRequest *RPCRequest) (*RPCResponse, error) {
 
-	httpRequest, err := client.newRequest(RPCRequest)
+	httpRequest, err := client.newRequest(ctx, RPCRequest)
 	if err != nil {
 		return nil, fmt.Errorf("rpc call %v() on %v: %v", RPCRequest.Method, client.endpoint, err.Error())
 	}
@@ -267,7 +278,7 @@ func (client *rpcClient) doCall(RPCRequest *RPCRequest) (*RPCResponse, error) {
 }
 
 func (client *rpcClient) doBatchCall(rpcRequest []*RPCRequest) ([]*RPCResponse, error) {
-	httpRequest, err := client.newRequest(rpcRequest)
+	httpRequest, err := client.newRequest(context.Background(), rpcRequest)
 	if err != nil {
 		return nil, fmt.Errorf("rpc batch call on %v: %v", client.endpoint, err.Error())
 	}

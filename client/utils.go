@@ -62,6 +62,16 @@ func GenerateActionsTransactionHash(addrFrom, addrTo, key string, nonce uint64, 
 	return signed_tx.Base64Encode()
 }
 
+
+func EncodeBase64Args(value interface{}) (string, error){
+	bytes, err := json.Marshal(value)
+	if err != nil {
+        return "", err
+	}
+	return base64.StdEncoding.EncodeToString(bytes), nil
+}
+
+// TODO: fix encode function to all types
 func EncodeToBase64(v interface{}) (string, error) {
     var buf bytes.Buffer
     encoder := base64.NewEncoder(base64.StdEncoding, &buf)

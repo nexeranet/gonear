@@ -23,12 +23,6 @@ func (t StatusTx) Result(value interface{}) error {
 	return json.Unmarshal(decoded64, value)
 }
 
-// func (s StatusTx) CheckError() error {
-// 	if !s.IsSuccess() {
-// 		return fmt.Errorf("Unknown error")
-// 	}
-// 	return nil
-// }
 
 func (s StatusTx) IsSuccess() bool {
 	if s.SuccessValue != nil {
@@ -37,36 +31,11 @@ func (s StatusTx) IsSuccess() bool {
 	return false
 }
 
-type FailerTx struct {
-	ActionError ActionError `json:"ActionError"`
-}
-
-func (f FailerTx) Error() error {
-	return f.ActionError.Kind.ReturnError()
-}
-
-type ActionError struct {
-	Index int             `json:"index"`
-	Kind  ActionErrorKind `json:"kind"`
-}
-
-type AccountDoesNotExist struct {
-	AccountId string `json:"account_id"`
-}
-
-func (a AccountDoesNotExist) Error() string {
-	return fmt.Sprintf("Account does not exist: %s", a.AccountId)
-}
-
-type ActionErrorKind struct {
-	AccountDoesNotExist *AccountDoesNotExist `json:"AccountDoesNotExist,omitempty"`
-}
-
-func (a ActionErrorKind) ReturnError() error {
-	if a.AccountDoesNotExist != nil {
-		return a.AccountDoesNotExist
-	}
-	return fmt.Errorf("Unknown error")
+func (s StatusTx) GetError() error {
+    if s.Failure == nil {
+        return fmt.Errorf("Failure value is nil")
+    }
+    return s.Failure
 }
 
 type Transaction struct {
