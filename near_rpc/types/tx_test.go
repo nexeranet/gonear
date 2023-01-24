@@ -3,8 +3,25 @@ package near_rpc_types
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"testing"
 )
+
+func TestDecodeString(t *testing.T) {
+	startValue := "aaaaa"
+	uEnc := base64.URLEncoding.EncodeToString([]byte(startValue))
+	status := StatusTx{
+		SuccessValue: &uEnc,
+	}
+	valuePointer := ""
+	err := status.Result(&valuePointer)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if valuePointer != startValue {
+		t.Fatalf("Expect %s, have %s", startValue, valuePointer)
+	}
+}
 
 func TestDecodeBool(t *testing.T) {
 	uEnc := base64.URLEncoding.EncodeToString([]byte("true"))
@@ -19,8 +36,8 @@ func TestDecodeBool(t *testing.T) {
 }
 
 func TestDecodeInt(t *testing.T) {
-    startValue := "123"
-	uEnc := base64.URLEncoding.EncodeToString([]byte(startValue))
+	startValue := 123
+	uEnc := base64.URLEncoding.EncodeToString([]byte(fmt.Sprint(startValue)))
 	status := StatusTx{
 		SuccessValue: &uEnc,
 	}
@@ -29,6 +46,10 @@ func TestDecodeInt(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+    if valuePointer != startValue {
+		t.Fatalf("Expect %d, have %d", startValue, valuePointer)
+    }
+
 }
 
 func TestDecodeStruct(t *testing.T) {
@@ -63,8 +84,8 @@ func TestDecodeArray(t *testing.T) {
 
 func TestDecodeMap(t *testing.T) {
 	jsonPrm, _ := json.Marshal(map[string]string{
-        "h": "a",
-    })
+		"h": "a",
+	})
 	uEnc := base64.URLEncoding.EncodeToString(jsonPrm)
 	status := StatusTx{
 		SuccessValue: &uEnc,
@@ -81,12 +102,12 @@ func TestDecodeSliceStruct(t *testing.T) {
 		V string `json:"v"`
 		D int    `json:"d"`
 	}
-    jsonPrm, _ := json.Marshal([]Prm{
-        {
-            V: "h",
-            D: 1,
-        },
-    })
+	jsonPrm, _ := json.Marshal([]Prm{
+		{
+			V: "h",
+			D: 1,
+		},
+	})
 	uEnc := base64.URLEncoding.EncodeToString(jsonPrm)
 	status := StatusTx{
 		SuccessValue: &uEnc,

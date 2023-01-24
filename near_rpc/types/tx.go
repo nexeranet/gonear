@@ -20,6 +20,11 @@ func (t StatusTx) Result(value interface{}) error {
 	if err != nil {
 		return err
 	}
+    vs, ok := value.(*string)
+    if ok {
+        *vs = string(decoded64)
+        return nil
+    }
 	return json.Unmarshal(decoded64, value)
 }
 
