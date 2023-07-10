@@ -13,21 +13,20 @@ type StatusTx struct {
 }
 
 func (t StatusTx) Result(value interface{}) error {
-    if !t.IsSuccess() {
-        return fmt.Errorf("Success value is nil")
-    }
+	if !t.IsSuccess() {
+		return fmt.Errorf("Success value is nil")
+	}
 	decoded64, err := base64.StdEncoding.DecodeString(*t.SuccessValue)
 	if err != nil {
 		return err
 	}
-    vs, ok := value.(*string)
-    if ok {
-        *vs = string(decoded64)
-        return nil
-    }
+	vs, ok := value.(*string)
+	if ok {
+		*vs = string(decoded64)
+		return nil
+	}
 	return json.Unmarshal(decoded64, value)
 }
-
 
 func (s StatusTx) IsSuccess() bool {
 	if s.SuccessValue != nil {
@@ -37,10 +36,10 @@ func (s StatusTx) IsSuccess() bool {
 }
 
 func (s StatusTx) GetError() error {
-    if s.Failure == nil {
-        return fmt.Errorf("Failure value is nil")
-    }
-    return s.Failure
+	if s.Failure == nil {
+		return fmt.Errorf("Failure value is nil")
+	}
+	return s.Failure
 }
 
 type Transaction struct {

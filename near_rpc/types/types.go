@@ -1,6 +1,4 @@
 // Near rpc api response types
-//
-//
 package near_rpc_types
 
 import (
@@ -21,7 +19,7 @@ type FunctionCallPermission struct {
 }
 
 func (p *Permission) IsFullAccess() bool {
-    return p.String == "FullAccess"
+	return p.String == "FullAccess"
 }
 
 func (p *Permission) UnmarshalJSON(data []byte) error {

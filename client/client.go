@@ -11,6 +11,7 @@ import (
 	"github.com/nexeranet/gonear/near_rpc"
 	near_api_types "github.com/nexeranet/gonear/near_rpc/types"
 )
+const MaxGas uint64 = 300000000000000
 
 type IClient interface {
 	Rpc() near_rpc.INearRpc
