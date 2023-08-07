@@ -1,6 +1,4 @@
 // Near client
-//
-//
 package client
 
 import (
@@ -11,6 +9,7 @@ import (
 	"github.com/nexeranet/gonear/near_rpc"
 	near_api_types "github.com/nexeranet/gonear/near_rpc/types"
 )
+
 const MaxGas uint64 = 300000000000000
 
 type IClient interface {
@@ -23,7 +22,7 @@ type IClient interface {
 	ActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (*near_api_types.TxView, error)
 	AsyncActionsTx(key, publicKey, addrFrom, addrTo string, actions []types.Action) (string, error)
 	CallContractFunc(accountId, method_name, args_base64 string) (*near_api_types.ContractFuncResult, error)
-    CallContractFuncByBlockId(accountId, method_name, args_base64 string, block_id uint64) (*near_api_types.ContractFuncResult, error)
+	CallContractFuncByBlockId(accountId, method_name, args_base64 string, block_id uint64) (*near_api_types.ContractFuncResult, error)
 }
 
 type Client struct {

@@ -10,11 +10,15 @@ import (
 )
 
 type NearRpc struct {
-	c   jsonrpc.RPCClient
-	url string
+	c          jsonrpc.RPCClient
+	initialUrl string
 }
 
 type INearRpc interface {
+	SetInitialUrl()
+	SetUrl(string)
+	GetUrl() string
+	GetInitialUrl() string
 	Call(method string, params ...interface{}) (*jsonrpc.RPCResponse, error)
 	ViewAccessKey(account, publicKey string) (*types.AccessKeysView, error)
 	ViewAccessKeyByBlockId(account, publicKey string, blockId uint64) (*types.AccessKeysView, error)
@@ -58,21 +62,37 @@ type INearRpc interface {
 	ViewContractStateChangesByBlockId(accountIds []string, keyPrefixBase64 string, blockId uint64) (*types.ContractStateChangesView, error)
 	TxStatusWithReceipts(txHash, sender string) (*types.TxView, error)
 	ReceiptbyId(receiptId string) (*types.ViewReceipt, error)
-    ViewContractStateByBlockId(accountId, prefixBase64 string, blockId uint64) (*types.ContractStateView, error)
-    ViewContractCodeByBlockId(accountId string, blockId uint64) (*types.ContractCodeView, error)
-    CallContractFuncByBlockId(accountId, method_name, args_base64 string, block_id uint64) (*types.ContractFuncResult, error)
+	ViewContractStateByBlockId(accountId, prefixBase64 string, blockId uint64) (*types.ContractStateView, error)
+	ViewContractCodeByBlockId(accountId string, blockId uint64) (*types.ContractCodeView, error)
+	CallContractFuncByBlockId(accountId, method_name, args_base64 string, block_id uint64) (*types.ContractFuncResult, error)
 }
 
 func New(url string) *NearRpc {
 	rpc := &NearRpc{
-		url: url,
+		initialUrl: url,
 	}
-	rpc.c = jsonrpc.NewClient(rpc.url)
+	rpc.c = jsonrpc.NewClient(rpc.initialUrl)
 	return rpc
 }
 
-func NewInterface(url string) INearRpc{
-    return New(url)
+func NewInterface(url string) INearRpc {
+	return New(url)
+}
+
+func (a *NearRpc) SetUrl(url string) {
+	a.c.SetEndpoint(url)
+}
+
+func (a *NearRpc) SetInitialUrl() {
+	a.c.SetEndpoint(a.initialUrl)
+}
+
+func (a *NearRpc) GetUrl() string {
+	return a.c.GetEndpoint()
+}
+
+func (a *NearRpc) GetInitialUrl() string {
+	return a.initialUrl
 }
 
 func (a *NearRpc) Call(method string, params ...interface{}) (*jsonrpc.RPCResponse, error) {
@@ -84,8 +104,4 @@ func (a *NearRpc) Call(method string, params ...interface{}) (*jsonrpc.RPCRespon
 		return nil, types.ConvertError(response.Error)
 	}
 	return response, nil
-}
-
-func (a *NearRpc) GetUrl() string {
-	return a.url
 }

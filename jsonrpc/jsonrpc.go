@@ -19,6 +19,8 @@ const (
 )
 
 type RPCClient interface {
+    SetEndpoint(string)
+    GetEndpoint() string
 	Call(method string, params ...interface{}) (*RPCResponse, error)
 	CallContext(ctx context.Context, method string, params ...interface{}) (*RPCResponse, error)
 	CallRaw(request *RPCRequest) (*RPCResponse, error)
@@ -125,12 +127,13 @@ type RPCRequests []*RPCRequest
 func NewClient(endpoint string) RPCClient {
 	return NewClientWithOpts(endpoint, nil)
 }
+
 func NewClientWithOpts(endpoint string, opts *RPCClientOpts) RPCClient {
 	rpcClient := &rpcClient{
-		endpoint:      endpoint,
-		httpClient:    &http.Client{
-            Timeout: time.Second * 10,
-        },
+		endpoint: endpoint,
+		httpClient: &http.Client{
+			Timeout: time.Second * 10,
+		},
 		customHeaders: make(map[string]string),
 	}
 
@@ -149,6 +152,13 @@ func NewClientWithOpts(endpoint string, opts *RPCClientOpts) RPCClient {
 	}
 
 	return rpcClient
+}
+
+func (client *rpcClient) SetEndpoint(endpoint string) {
+	client.endpoint = endpoint
+}
+func (client *rpcClient) GetEndpoint() string {
+	return client.endpoint
 }
 
 func (client *rpcClient) Call(method string, params ...interface{}) (*RPCResponse, error) {
