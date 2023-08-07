@@ -60,6 +60,7 @@ type INearRpc interface {
 	ReceiptbyId(receiptId string) (*types.ViewReceipt, error)
     ViewContractStateByBlockId(accountId, prefixBase64 string, blockId uint64) (*types.ContractStateView, error)
     ViewContractCodeByBlockId(accountId string, blockId uint64) (*types.ContractCodeView, error)
+    CallContractFuncByBlockId(accountId, method_name, args_base64 string, block_id uint64) (*types.ContractFuncResult, error)
 }
 
 func New(url string) *NearRpc {

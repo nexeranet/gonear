@@ -67,7 +67,7 @@ func (a *NearRpc) ViewContractState(accountId, prefixBase64 string) (*types.Cont
 func (a *NearRpc) ViewContractStateByBlockId(accountId, prefixBase64 string, blockId uint64) (*types.ContractStateView, error) {
 	type Params struct {
 		RequestType  string `json:"request_type"`
-		BlockId     uint64 `json:"block_id"`
+		BlockId      uint64 `json:"block_id"`
 		AccountID    string `json:"account_id"`
 		PrefixBase64 string `json:"prefix_base64"`
 	}
@@ -90,6 +90,31 @@ func (a *NearRpc) CallContractFunc(accountId, method_name, args_base64 string) (
 		ArgsBase64  string `json:"args_base64"`
 	}
 	params := Params{"call_function", "final", accountId, method_name, args_base64}
+	response, err := a.Call("query", &params)
+	if err != nil {
+		return nil, err
+	}
+	var raw types.ContractFuncResult
+	err = response.GetObject(&raw)
+	if err != nil {
+		return nil, err
+	}
+	if raw.Error != "" {
+		return nil, fmt.Errorf(raw.Error)
+	}
+	return &raw, nil
+}
+
+// Call a contract method as a view function by block id.
+func (a *NearRpc) CallContractFuncByBlockId(accountId, method_name, args_base64 string, block_id uint64) (*types.ContractFuncResult, error) {
+	type Params struct {
+		RequestType string `json:"request_type"`
+		BlockId     uint64 `json:"block_id"`
+		AccountID   string `json:"account_id"`
+		MethodName  string `json:"method_name"`
+		ArgsBase64  string `json:"args_base64"`
+	}
+	params := Params{"call_function", block_id, accountId, method_name, args_base64}
 	response, err := a.Call("query", &params)
 	if err != nil {
 		return nil, err

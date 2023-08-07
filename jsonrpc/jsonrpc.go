@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
+	"time"
 )
 
 const (
@@ -127,7 +128,9 @@ func NewClient(endpoint string) RPCClient {
 func NewClientWithOpts(endpoint string, opts *RPCClientOpts) RPCClient {
 	rpcClient := &rpcClient{
 		endpoint:      endpoint,
-		httpClient:    &http.Client{},
+		httpClient:    &http.Client{
+            Timeout: time.Second * 10,
+        },
 		customHeaders: make(map[string]string),
 	}
 
