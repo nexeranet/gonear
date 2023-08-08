@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
+	"sync"
 	"time"
 )
 
@@ -82,6 +83,7 @@ func (e *HTTPError) Error() string {
 }
 
 type rpcClient struct {
+    mu       sync.Mutex
 	endpoint      string
 	httpClient    *http.Client
 	customHeaders map[string]string
@@ -155,9 +157,14 @@ func NewClientWithOpts(endpoint string, opts *RPCClientOpts) RPCClient {
 }
 
 func (client *rpcClient) SetEndpoint(endpoint string) {
+    client.mu.Lock()
+    defer client.mu.Unlock()
 	client.endpoint = endpoint
 }
+
 func (client *rpcClient) GetEndpoint() string {
+    client.mu.Lock()
+    defer client.mu.Unlock()
 	return client.endpoint
 }
 
@@ -229,7 +236,7 @@ func (client *rpcClient) newRequest(ctx context.Context, req interface{}) (*http
 		return nil, err
 	}
 
-	request, err := http.NewRequest("POST", client.endpoint, bytes.NewReader(body))
+	request, err := http.NewRequest("POST", client.GetEndpoint(), bytes.NewReader(body))
 	if err != nil {
 		return nil, err
 	}
@@ -249,7 +256,7 @@ func (client *rpcClient) doCall(ctx context.Context, RPCRequest *RPCRequest) (*R
 
 	httpRequest, err := client.newRequest(ctx, RPCRequest)
 	if err != nil {
-		return nil, fmt.Errorf("rpc call %v() on %v: %v", RPCRequest.Method, client.endpoint, err.Error())
+		return nil, fmt.Errorf("rpc call %v() on %v: %v", RPCRequest.Method, client.GetEndpoint(), err.Error())
 	}
 	httpResponse, err := client.httpClient.Do(httpRequest)
 	if err != nil {
@@ -293,7 +300,7 @@ func (client *rpcClient) doCall(ctx context.Context, RPCRequest *RPCRequest) (*R
 func (client *rpcClient) doBatchCall(rpcRequest []*RPCRequest) ([]*RPCResponse, error) {
 	httpRequest, err := client.newRequest(context.Background(), rpcRequest)
 	if err != nil {
-		return nil, fmt.Errorf("rpc batch call on %v: %v", client.endpoint, err.Error())
+		return nil, fmt.Errorf("rpc batch call on %v: %v", client.GetEndpoint(), err.Error())
 	}
 	httpResponse, err := client.httpClient.Do(httpRequest)
 	if err != nil {
