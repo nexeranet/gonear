@@ -20,14 +20,15 @@ const (
 )
 
 type RPCClient interface {
-    SetEndpoint(string)
-    GetEndpoint() string
+	SetEndpoint(string)
+	GetEndpoint() string
 	Call(method string, params ...interface{}) (*RPCResponse, error)
 	CallContext(ctx context.Context, method string, params ...interface{}) (*RPCResponse, error)
 	CallRaw(request *RPCRequest) (*RPCResponse, error)
 	CallFor(out interface{}, method string, params ...interface{}) error
 	CallBatch(requests RPCRequests) (RPCResponses, error)
 	CallBatchRaw(requests RPCRequests) (RPCResponses, error)
+	CreateRequest(endpoint string) *Request
 }
 
 type RPCRequest struct {
@@ -37,7 +38,7 @@ type RPCRequest struct {
 	JSONRPC string      `json:"jsonrpc"`
 }
 
-func NewRequest(method string, params ...interface{}) *RPCRequest {
+func NewRPCRequest(method string, params ...interface{}) *RPCRequest {
 	request := &RPCRequest{
 		Method:  method,
 		Params:  Params(params...),
@@ -83,7 +84,7 @@ func (e *HTTPError) Error() string {
 }
 
 type rpcClient struct {
-    mu       sync.Mutex
+	mu            sync.Mutex
 	endpoint      string
 	httpClient    *http.Client
 	customHeaders map[string]string
@@ -157,15 +158,19 @@ func NewClientWithOpts(endpoint string, opts *RPCClientOpts) RPCClient {
 }
 
 func (client *rpcClient) SetEndpoint(endpoint string) {
-    client.mu.Lock()
-    defer client.mu.Unlock()
+	client.mu.Lock()
+	defer client.mu.Unlock()
 	client.endpoint = endpoint
 }
 
 func (client *rpcClient) GetEndpoint() string {
-    client.mu.Lock()
-    defer client.mu.Unlock()
+	client.mu.Lock()
+	defer client.mu.Unlock()
 	return client.endpoint
+}
+
+func (client *rpcClient) CreateRequest(endpoint string) *Request {
+	return NewRequest(endpoint, client.httpClient)
 }
 
 func (client *rpcClient) Call(method string, params ...interface{}) (*RPCResponse, error) {
@@ -229,14 +234,14 @@ func (client *rpcClient) CallBatchRaw(requests RPCRequests) (RPCResponses, error
 	return client.doBatchCall(requests)
 }
 
-func (client *rpcClient) newRequest(ctx context.Context, req interface{}) (*http.Request, error) {
+func NewHttpRequest(ctx context.Context, req interface{}, endpoint string, customHeaders map[string]string) (*http.Request, error) {
 
 	body, err := json.Marshal(req)
 	if err != nil {
 		return nil, err
 	}
 
-	request, err := http.NewRequest("POST", client.GetEndpoint(), bytes.NewReader(body))
+	request, err := http.NewRequest("POST", endpoint, bytes.NewReader(body))
 	if err != nil {
 		return nil, err
 	}
@@ -245,7 +250,7 @@ func (client *rpcClient) newRequest(ctx context.Context, req interface{}) (*http
 	request.Header.Set("Accept", "application/json")
 	request = request.WithContext(ctx)
 	// set default headers first, so that even content type and accept can be overwritten
-	for k, v := range client.customHeaders {
+	for k, v := range customHeaders {
 		request.Header.Set(k, v)
 	}
 
@@ -254,7 +259,7 @@ func (client *rpcClient) newRequest(ctx context.Context, req interface{}) (*http
 
 func (client *rpcClient) doCall(ctx context.Context, RPCRequest *RPCRequest) (*RPCResponse, error) {
 
-	httpRequest, err := client.newRequest(ctx, RPCRequest)
+	httpRequest, err := NewHttpRequest(ctx, RPCRequest, client.GetEndpoint(), client.customHeaders)
 	if err != nil {
 		return nil, fmt.Errorf("rpc call %v() on %v: %v", RPCRequest.Method, client.GetEndpoint(), err.Error())
 	}
@@ -298,7 +303,7 @@ func (client *rpcClient) doCall(ctx context.Context, RPCRequest *RPCRequest) (*R
 }
 
 func (client *rpcClient) doBatchCall(rpcRequest []*RPCRequest) ([]*RPCResponse, error) {
-	httpRequest, err := client.newRequest(context.Background(), rpcRequest)
+	httpRequest, err := NewHttpRequest(context.Background(), rpcRequest, client.GetEndpoint(), client.customHeaders)
 	if err != nil {
 		return nil, fmt.Errorf("rpc batch call on %v: %v", client.GetEndpoint(), err.Error())
 	}

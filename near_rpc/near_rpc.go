@@ -14,12 +14,11 @@ type NearRpc struct {
 	initialUrl string
 }
 
-type INearRpc interface {
-	SetInitialUrl()
-	SetUrl(string)
-	GetUrl() string
-	GetInitialUrl() string
+type ICallMethod interface {
 	Call(method string, params ...interface{}) (*jsonrpc.RPCResponse, error)
+}
+
+type IClient interface {
 	ViewAccessKey(account, publicKey string) (*types.AccessKeysView, error)
 	ViewAccessKeyByBlockId(account, publicKey string, blockId uint64) (*types.AccessKeysView, error)
 	ViewAccessKeyList(account string) (*types.AccessKeysListViev, error)
@@ -67,6 +66,21 @@ type INearRpc interface {
 	CallContractFuncByBlockId(accountId, method_name, args_base64 string, block_id uint64) (*types.ContractFuncResult, error)
 }
 
+type INearRpcBase interface {
+	SetInitialUrl()
+	SetUrl(string)
+	GetUrl() string
+	GetInitialUrl() string
+    RequestEndpoint(endpoint string) *Request
+    Request() *Request
+}
+
+type INearRpc interface {
+	INearRpcBase
+	IClient
+	ICallMethod
+}
+
 func New(url string) *NearRpc {
 	rpc := &NearRpc{
 		initialUrl: url,
@@ -77,6 +91,14 @@ func New(url string) *NearRpc {
 
 func NewInterface(url string) INearRpc {
 	return New(url)
+}
+
+func (a *NearRpc) RequestEndpoint(endpoint string) *Request{
+	return NewRequest(a.c.CreateRequest(endpoint))
+}
+
+func (a *NearRpc) Request() *Request{
+	return NewRequest(a.c.CreateRequest(a.initialUrl))
 }
 
 func (a *NearRpc) SetUrl(url string) {
