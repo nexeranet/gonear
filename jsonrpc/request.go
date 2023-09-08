@@ -16,6 +16,7 @@ type Request struct {
 
 func NewRequest(endpoint string, client *http.Client)  *Request{
    return &Request{
+        HttpClient: client,
         Endpoint: endpoint,
         Headers: make(map[string]string),
         Context: context.Background(),
