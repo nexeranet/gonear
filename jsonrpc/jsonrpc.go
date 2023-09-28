@@ -135,7 +135,7 @@ func NewClientWithOpts(endpoint string, opts *RPCClientOpts) RPCClient {
 	rpcClient := &rpcClient{
 		endpoint: endpoint,
 		httpClient: &http.Client{
-			Timeout: time.Second * 10,
+			Timeout: time.Second * 30,
 		},
 		customHeaders: make(map[string]string),
 	}
