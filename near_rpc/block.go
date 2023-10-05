@@ -5,7 +5,7 @@ import (
 )
 
 // Queries network and returns latest block details
-func (a *NearRpc) Block() (*types.BlockView, error) {
+func (a *Request) Block() (*types.BlockView, error) {
 	type Params struct {
 		Finality string `json:"finality"`
 	}
@@ -18,8 +18,12 @@ func (a *NearRpc) Block() (*types.BlockView, error) {
 	return &raw, response.GetObject(&raw)
 }
 
+func (a *NearRpc) Block() (*types.BlockView, error) {
+	return a.Request().Block()
+}
+
 // Queries network and returns block for given height.
-func (a *NearRpc) BlockByNumber(number uint64) (*types.BlockView, error) {
+func (a *Request) BlockByNumber(number uint64) (*types.BlockView, error) {
 	type Params struct {
 		BlockId uint64 `json:"block_id"`
 	}
@@ -32,8 +36,12 @@ func (a *NearRpc) BlockByNumber(number uint64) (*types.BlockView, error) {
 	return &raw, response.GetObject(&raw)
 }
 
+func (a *NearRpc) BlockByNumber(number uint64) (*types.BlockView, error) {
+	return a.Request().BlockByNumber(number)
+}
+
 // Queries network and returns block for given hash.
-func (a *NearRpc) BlockByHash(hash string) (*types.BlockView, error) {
+func (a *Request) BlockByHash(hash string) (*types.BlockView, error) {
 	type Params struct {
 		BlockId string `json:"block_id"`
 	}
@@ -46,8 +54,12 @@ func (a *NearRpc) BlockByHash(hash string) (*types.BlockView, error) {
 	return &raw, response.GetObject(&raw)
 }
 
+func (a *NearRpc) BlockByHash(hash string) (*types.BlockView, error) {
+	return a.Request().BlockByHash(hash)
+}
+
 // Returns changes in block for given latest block details.
-func (a *NearRpc) ChangesInBlock() (*types.BlockChangesView, error) {
+func (a *Request) ChangesInBlock() (*types.BlockChangesView, error) {
 	type Params struct {
 		Finality string `json:"finality"`
 	}
@@ -60,8 +72,12 @@ func (a *NearRpc) ChangesInBlock() (*types.BlockChangesView, error) {
 	return &raw, response.GetObject(&raw)
 }
 
+func (a *NearRpc) ChangesInBlock() (*types.BlockChangesView, error) {
+	return a.Request().ChangesInBlock()
+}
+
 // Returns changes in block for given block hash.
-func (a *NearRpc) ChangesInBlockByHash(hash string) (*types.BlockChangesView, error) {
+func (a *Request) ChangesInBlockByHash(hash string) (*types.BlockChangesView, error) {
 	type Params struct {
 		BlockId string `json:"block_id"`
 	}
@@ -74,8 +90,12 @@ func (a *NearRpc) ChangesInBlockByHash(hash string) (*types.BlockChangesView, er
 	return &raw, response.GetObject(&raw)
 }
 
+func (a *NearRpc) ChangesInBlockByHash(hash string) (*types.BlockChangesView, error) {
+	return a.Request().ChangesInBlockByHash(hash)
+}
+
 // Returns changes in block for given block height.
-func (a *NearRpc) ChangesInBlockById(id uint64) (*types.BlockChangesView, error) {
+func (a *Request) ChangesInBlockById(id uint64) (*types.BlockChangesView, error) {
 	type Params struct {
 		BlockId uint64 `json:"block_id"`
 	}
@@ -86,4 +106,8 @@ func (a *NearRpc) ChangesInBlockById(id uint64) (*types.BlockChangesView, error)
 	}
 	var raw types.BlockChangesView
 	return &raw, response.GetObject(&raw)
+}
+
+func (a *NearRpc) ChangesInBlockById(id uint64) (*types.BlockChangesView, error) {
+	return a.Request().ChangesInBlockById(id)
 }

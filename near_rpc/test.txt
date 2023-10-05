@@ -1,4 +1,0 @@
---- FAIL: TestReceiptbyId (0.09s)
-    --- FAIL: TestReceiptbyId/Base_case (0.04s)
-FAIL
-FAIL	github.com/nexeranet/gonear/near_api	6.796s

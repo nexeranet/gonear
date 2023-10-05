@@ -5,7 +5,7 @@ import (
 )
 
 //Returns current genesis configuration.
-func (a *NearRpc) GenesisConfig() (*types.GenesisConfigView, error) {
+func (a *Request) GenesisConfig() (*types.GenesisConfigView, error) {
 	response, err := a.Call("EXPERIMENTAL_genesis_config")
 	if err != nil {
 		return nil, err
@@ -14,9 +14,13 @@ func (a *NearRpc) GenesisConfig() (*types.GenesisConfigView, error) {
 	return &raw, response.GetObject(&raw)
 }
 
+func (a *NearRpc) GenesisConfig() (*types.GenesisConfigView, error) {
+    return a.Request().GenesisConfig()
+}
+
 //Returns most recent protocol configuration last block.
 //Useful for finding current storage and transaction costs.
-func (a *NearRpc) ProtocolConfig() (*types.ProtocolConfigView, error) {
+func (a *Request) ProtocolConfig() (*types.ProtocolConfigView, error) {
 	type Params struct {
 		Finality string `json:"finality"`
 	}
@@ -29,9 +33,13 @@ func (a *NearRpc) ProtocolConfig() (*types.ProtocolConfigView, error) {
 	return &raw, response.GetObject(&raw)
 }
 
+func (a *NearRpc) ProtocolConfig() (*types.ProtocolConfigView, error) {
+    return a.Request().ProtocolConfig()
+}
+
 //Returns most recent protocol configuration of a specific queried block.
 //Useful for finding current storage and transaction costs.
-func (a *NearRpc) ProtocolConfigByBlockId(blockId uint64) (*types.ProtocolConfigView, error) {
+func (a *Request) ProtocolConfigByBlockId(blockId uint64) (*types.ProtocolConfigView, error) {
 	type Params struct {
 		BlockId uint64 `json:"block_id"`
 	}
@@ -42,4 +50,8 @@ func (a *NearRpc) ProtocolConfigByBlockId(blockId uint64) (*types.ProtocolConfig
 	}
 	var raw types.ProtocolConfigView
 	return &raw, response.GetObject(&raw)
+}
+
+func (a *NearRpc) ProtocolConfigByBlockId(blockId uint64) (*types.ProtocolConfigView, error) {
+    return a.Request().ProtocolConfigByBlockId(blockId)
 }
