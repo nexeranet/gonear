@@ -88,7 +88,6 @@ type RPCClientOpts struct {
 	CustomHeaders map[string]string
 }
 
-
 type RPCRequests []*RPCRequest
 
 func NewClient(endpoint string) RPCClient {
@@ -99,7 +98,7 @@ func NewClientWithOpts(endpoint string, opts *RPCClientOpts) RPCClient {
 	rpcClient := &rpcClient{
 		endpoint: endpoint,
 		httpClient: &http.Client{
-			Timeout: time.Second * 30,
+			Timeout: time.Minute * 5,
 		},
 		customHeaders: make(map[string]string),
 	}
